@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity {
@@ -12,6 +16,27 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ListView shoppingListView;
+        ArrayAdapter shoppingListAdapter;
+        ArrayList shoppingList = new ArrayList();
+
+        shoppingListView = (ListView) findViewById(R.id.shopping_list_view);
+
+        // Create an ArrayAdapter for the ListView
+        shoppingListAdapter = new ArrayAdapter(this,
+            android.R.layout.simple_list_item_1,
+            shoppingList);
+
+        // Set the ListView to use the ArrayAdapter
+        shoppingListView.setAdapter(shoppingListAdapter);
+
+        shoppingList.add("Pasta");
+        shoppingList.add("Burger");
+        shoppingList.add("Pizza");
+        shoppingList.add("Banana");
+        shoppingListAdapter.notifyDataSetChanged();
+
     }
 
 
