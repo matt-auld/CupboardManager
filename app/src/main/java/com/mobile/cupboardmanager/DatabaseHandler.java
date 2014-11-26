@@ -15,7 +15,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String ITEM_TABLE = "item";
     // Item table column names
     private static final String ITEM_ID = "_ID";
-    private static final String ITEM_NAME = "name";
     private static final String ITEM_TAGS = "tags";
 
     // Shopping table name
@@ -46,7 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_ITEM_TABLE = "CREATE TABLE " + ITEM_TABLE + "(" +
-                ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + ITEM_NAME + " TEXT, " +
+                ITEM_ID + " TEXT PRIMARY KEY, " +
                 ITEM_TAGS + " TEXT" + ")";
 
         final String CREATE_SHOPPING_TABLE = "CREATE TABLE " + SHOPPING_TABLE + "(" +
