@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
 
         // Create an ArrayAdapter for the ListView
         shoppingListAdapter = new ArrayAdapter(this,
-            R.layout.shoppingrow,
+            R.layout.shoppingrow, R.id.shopping_item,
             shoppingList);
 
         // Set the ListView to use the ArrayAdapter
