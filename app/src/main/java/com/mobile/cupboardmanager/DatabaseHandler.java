@@ -123,7 +123,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //insert shopping item into database
-    public long insertShoppingItem(ShoppingItem shoppingItem) {
+    public long insertItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -179,7 +179,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //update shopping item in database. returns number of updated rows. not sure this even makes sense
-    public int updateShoppingItem(ShoppingItem shoppingItem) {
+    public int updateItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -190,13 +190,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //delete shoppingitem from database. returns number of deleted rows
-    public int deleteShoppingItem(ShoppingItem shoppingItem) {
+    public int deleteItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(SHOPPING_TABLE, SHOPPING_ITEM + " = ?", new String[] {shoppingItem.getName()});
     }
 
     //insert shopping item into database
-    public long insertCupboardItem(CupboardItem cupboardItem) {
+    public long insertItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -258,7 +258,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //delete cupboard item from database. returns number of deleted rows
-    public int deleteCupboardItem(CupboardItem cupboardItem) {
+    public int deleteItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(CUPBOARD_TABLE, CUPBOARD_ITEM + " = ?", new String[] {cupboardItem.getName()});
     }
