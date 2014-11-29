@@ -184,9 +184,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(SHOPPING_ITEM, shoppingItem.getName());
-        values.put(SHOPPING_ITEM, shoppingItem.getQuantity());
+        values.put(SHOPPING_QUANTITY, shoppingItem.getQuantity());
 
-        return db.update(SHOPPING_TABLE, values, ITEM_ID + " = ?", new String[] {shoppingItem.getName()});
+        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[] {shoppingItem.getName()});
     }
 
     //delete shoppingitem from database. returns number of deleted rows
