@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class CupboardItem implements Parcelable {
     String name; //foreign key of item
     int quantity;
-    int expiry_time_ms;
+    long expiry_time_ms;
     int notification_id;
 
     //constructors
@@ -63,7 +63,7 @@ public class CupboardItem implements Parcelable {
         this.quantity = quantity;
     }
 
-    public void setExpiry_time_ms(int expiry_time_ms) {
+    public void setExpiry_time_ms(long expiry_time_ms) {
         this.expiry_time_ms = expiry_time_ms;
     }
 
@@ -80,7 +80,7 @@ public class CupboardItem implements Parcelable {
         return this.quantity;
     }
 
-    public int getExpiry_time_ms() {
+    public long getExpiry_time_ms() {
         return expiry_time_ms;
     }
 
@@ -97,14 +97,14 @@ public class CupboardItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeInt(quantity);
-        dest.writeInt(expiry_time_ms);
+        dest.writeLong(expiry_time_ms);
         dest.writeInt(notification_id);
     }
 
     public void readFromParcel(Parcel source) {
         name = source.readString();
         quantity = source.readInt();
-        expiry_time_ms = source.readInt();
+        expiry_time_ms = source.readLong();
         notification_id = source.readInt();
     }
 }

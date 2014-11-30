@@ -227,7 +227,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         CupboardItem item = new CupboardItem();
         item.setName(c.getString(c.getColumnIndex(CUPBOARD_ITEM)));
         item.setQuantity(c.getInt(c.getColumnIndex(CUPBOARD_QUANTITY)));
-        item.setExpiry_time_ms(c.getInt(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
+        item.setExpiry_time_ms(c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
         item.setNotification_id(c.getInt(c.getColumnIndex(CUPBOARD_NOTIFICATION_ID)));
 
         return item;
@@ -246,7 +246,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 CupboardItem item = new CupboardItem();
                 item.setName((c.getString(c.getColumnIndex(CUPBOARD_ITEM))));
                 item.setQuantity(c.getInt((c.getColumnIndex(CUPBOARD_QUANTITY))));
-                item.setExpiry_time_ms(c.getInt(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
+                item.setExpiry_time_ms(c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
                 item.setNotification_id(c.getInt(c.getColumnIndex(CUPBOARD_NOTIFICATION_ID)));
 
                 // adding to todo list
