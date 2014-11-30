@@ -71,7 +71,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
             } else {
                 mCupboardItem.setName(itemName);
                 mCupboardItem.setQuantity(itemQuantity);
-                mCupboardItem.setExpiry_time_ms((int) mDatePicker.getCalendarView().getDate());
+                mCupboardItem.setExpiry_time_ms(mDatePicker.getCalendarView().getDate());
                 if (mIsEditMode) {
                     // TODO: we still need to implement this api call
                     //databaseHandler.updateCupboardItem(mCupboardItem);
@@ -124,14 +124,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         setContentView(R.layout.item_activity);
 
         mDatabaseHandler = new DatabaseHandler(ItemActivity.this);
-
         mDatePicker = (DatePicker)findViewById(R.id.datePicker);
-        // We obviously don't want a user selecting a date from the past
-        // However we need to subtract 1 second here otherwise DatePicker will throw an exception
-        // since the minimum date cannot be set to now
-        long currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
-        mDatePicker.setMinDate(currentTimeInMillis - TimeUnit.SECONDS.toMillis(1));
-        mDatePicker.getCalendarView().setDate(currentTimeInMillis + TimeUnit.DAYS.toMillis(1));
 
         SeekBar seekBar = ((SeekBar)findViewById(R.id.item_quantity_seek_bar));
         seekBar.setOnSeekBarChangeListener(this);
@@ -202,9 +195,15 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         // Load fields with object data
         ((TextView)findViewById(R.id.item_name)).setText(item.getName());
 
-        int itemExpiryMs = item.getExpiry_time_ms();
+        // We need to subtract 1 second here otherwise DatePicker will throw an exception
+        // since the minimum date cannot be set to now
+        long currentTimeMs = Calendar.getInstance().getTimeInMillis() - TimeUnit.SECONDS.toMillis(1);
+        long itemExpiryMs = item.getExpiry_time_ms();
         if (itemExpiryMs > 0) {
+            mDatePicker.setMinDate((itemExpiryMs < currentTimeMs) ? itemExpiryMs : currentTimeMs);
             mDatePicker.getCalendarView().setDate(itemExpiryMs);
+        } else {
+            mDatePicker.setMinDate(currentTimeMs);
         }
         setItemQuantity(item.getQuantity());
     }
