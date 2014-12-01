@@ -1,7 +1,14 @@
 package com.mobile.cupboardmanager;
 
+import com.astuetz.PagerSlidingTabStrip;
+import com.mobile.cupboardmanager.TabsPagerAdapter;
+
+import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -9,38 +16,24 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView shoppingListView;
-        ArrayAdapter shoppingListAdapter;
-        ArrayList shoppingList = new ArrayList();
+        // Initilization
+        // Initialize the ViewPager and set an adapter
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
 
-        shoppingListView = (ListView) findViewById(R.id.shopping_list_view);
-
-        // Create an ArrayAdapter for the ListView
-        shoppingListAdapter = new ArrayAdapter(this,
-            R.layout.shoppingrow, R.id.shopping_item,
-            shoppingList);
-
-        // Set the ListView to use the ArrayAdapter
-        shoppingListView.setAdapter(shoppingListAdapter);
-
-        shoppingList.add("Pasta");
-        shoppingList.add("Burger");
-        shoppingList.add("Pizza");
-        shoppingList.add("Banana");
-        shoppingListAdapter.notifyDataSetChanged();
-
+        // Bind the tabs to the ViewPager
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(pager);
     }
 
-
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -60,5 +53,5 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 }
