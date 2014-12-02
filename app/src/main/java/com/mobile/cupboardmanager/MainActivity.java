@@ -23,14 +23,23 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initilization
         // Initialize the ViewPager and set an adapter
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
+        // If there exists a pager view then we must have loaded the phone layout
+        if (pager != null) {
+            pager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
+            // Bind the tabs to the ViewPager
+            PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+            tabs.setViewPager(pager);
+        } else {
+            ShoppingFragment shoppingFragment = new ShoppingFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.shopping_list_container,
+                    shoppingFragment).commit();
 
-        // Bind the tabs to the ViewPager
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
+            CupboardFragment cupboardFragment = new CupboardFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.cupboard_list_container,
+                    cupboardFragment).commit();
+        }
     }
 
     /*@Override
