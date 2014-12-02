@@ -81,7 +81,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ITEM_ID, item.getName());
+        values.put(ITEM_NAME, item.getName());
 
         long item_id = db.insert(ITEM_TABLE, null, values);
 
@@ -93,7 +93,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + ITEM_TABLE + " WHERE "
-                + ITEM_ID + " = " + item_name;
+                + ITEM_NAME + " = " + item_name;
 
         Cursor c = db.rawQuery(selectQuery, null);
         if (c == null) {
@@ -103,7 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
 
         Item item = new Item();
-        item.setName(c.getString(c.getColumnIndex(ITEM_ID)));
+        item.setName(c.getString(c.getColumnIndex(ITEM_NAME)));
 
         return item;
     }
@@ -129,15 +129,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ITEM_ID, item.getName());
+        values.put(ITEM_NAME, item.getName());
 
-        return db.update(ITEM_TABLE, values, ITEM_ID + " = ?", new String[] {item.getName()});
+        return db.update(ITEM_TABLE, values, ITEM_NAME + " = ?", new String[] {item.getName()});
     }
 
     //delete item from database. returns number of deleted rows
     public int deleteItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(ITEM_TABLE, ITEM_ID + " = ?", new String[] {item.getName()});
+        return db.delete(ITEM_TABLE, ITEM_NAME + " = ?", new String[] {item.getName()});
     }
 
     //insert shopping item into database
@@ -168,7 +168,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         c.moveToFirst();
 
         ShoppingItem item = new ShoppingItem();
-        item.setName(c.getString(c.getColumnIndex(ITEM_ID)));
+        item.setName(c.getString(c.getColumnIndex(ITEM_NAME)));
         item.setQuantity(c.getInt(c.getColumnIndex(CUPBOARD_QUANTITY)));
 
         return item;
