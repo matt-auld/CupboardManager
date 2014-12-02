@@ -5,14 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
+import android.util.Log;
+
+import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  *  Database helper-class implementing CRUD(Create, Read, Update, Delete)
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
+    private static final String TAG = "DatabaseHandler";
+
     public static final String DATABASE_NAME = "cupboard_manager_db";
     private static final int DATABASE_VERSION = 1;
 
@@ -26,9 +33,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Shopping table name
     public static final String SHOPPING_TABLE = "shopping";
     // Shopping table columns
-    private static final String SHOPPING_ID = "_ID";
+    public static final String SHOPPING_ID = "_ID";
     public static final String SHOPPING_ITEM = "item_fk";
-    private static final String SHOPPING_QUANTITY = "quantity";
+    public static final String SHOPPING_QUANTITY = "quantity";
 
     // Cupboard table name
     private static final String CUPBOARD_TABLE = "cupboard";
@@ -144,9 +151,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long insertItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // We need to find the ID for the item in the items table
+
+        // Create a builder to query database
+        SQLiteQueryBuilder qBuilder = new SQLiteQueryBuilder();
+        qBuilder.setTables(ITEM_TABLE);
+        qBuilder.appendWhere(ITEM_NAME + "=\"" + shoppingItem.getName() + "\"");
+        String[] projection = {ITEM_ID};
+
+        Cursor cursor = qBuilder.query(db, projection, null, null, null, null, null);
+
+        if (cursor.getCount() < 1)
+        {
+            throw new NoSuchElementException("No item found in the Items table with the name of: " +
+                    shoppingItem.getName() + "\" when trying to insert a shopping item");
+        }
+        else if (cursor.getCount() > 1)
+        {
+            Log.w(TAG, "Multiple items found for name: " + shoppingItem.getName() +
+                    "\" when trying to insert a shopping item");
+        }
+
+        cursor.moveToNext();
+        int idIndex = cursor.getColumnIndex(ITEM_ID);
+
+        int itemID = cursor.getInt(idIndex);
+
         ContentValues values = new ContentValues();
         values.put(SHOPPING_QUANTITY, shoppingItem.getQuantity());
-        values.put(SHOPPING_ITEM, shoppingItem.getName());
+        values.put(SHOPPING_ITEM, itemID);
 
         long shopping_item_id = db.insert(SHOPPING_TABLE, null, values);
 
@@ -217,8 +250,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public long insertItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        // We need to find the ID for the item in the items table
+
+        // Create a builder to query database
+        SQLiteQueryBuilder qBuilder = new SQLiteQueryBuilder();
+        qBuilder.setTables(ITEM_TABLE);
+        qBuilder.appendWhere(ITEM_NAME + "=\"" + cupboardItem.getName() + "\"");
+        String[] projection = {ITEM_ID};
+
+        Cursor cursor = qBuilder.query(db, projection, null, null, null, null, null);
+
+        if (cursor.getCount() < 1)
+        {
+            throw new NoSuchElementException("No item found in the Items table with the name of: \"" +
+                    cupboardItem.getName() + "\" when trying to insert a cupboard item");
+        }
+        else if (cursor.getCount() > 1)
+        {
+            Log.w(TAG, "Multiple items found for name: " + cupboardItem.getName() +
+                    "\" when trying to insert a cupboard item");
+        }
+
+        cursor.moveToNext();
+        int idIndex = cursor.getColumnIndex(ITEM_ID);
+
+        int itemID = cursor.getInt(idIndex);
+
         ContentValues values = new ContentValues();
-        values.put(CUPBOARD_ITEM, cupboardItem.getName());
+        values.put(CUPBOARD_ITEM, itemID);
         values.put(CUPBOARD_QUANTITY, cupboardItem.getQuantity());
         values.put(CUPBOARD_EXPIRY_TIME, cupboardItem.getExpiry_time_ms());
         values.put(CUPBOARD_NOTIFICATION_ID, cupboardItem.getNotification_id());
