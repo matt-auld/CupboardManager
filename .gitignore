@@ -22,6 +22,8 @@ build/
 .idea/datasources.xml
 .idea/dataSources.ids
 .idea/misc.xml
+.idea/libraries
+.idea/inspectionProfiles
 
 # Local configuration file (sdk path, etc)
 local.properties
