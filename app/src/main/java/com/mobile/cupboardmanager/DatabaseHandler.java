@@ -91,7 +91,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + ITEM_TABLE + " WHERE "
-                + ITEM_ID + " = " + item_name;
+                + ITEM_ID + " = '" + item_name +"'";
 
         Cursor c = db.rawQuery(selectQuery, null);
         if (c == null) {
@@ -119,7 +119,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //delete item from database. returns number of deleted rows
     public int deleteItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(ITEM_TABLE, ITEM_ID + " = ?", new String[] {item.getName()});
+        return db.delete(ITEM_TABLE, ITEM_ID + " = ?", new String[]{item.getName()});
     }
 
     //insert shopping item into database
@@ -140,7 +140,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + SHOPPING_TABLE + " WHERE "
-                + SHOPPING_ITEM + " = " + shopping_item_name;
+                + SHOPPING_ITEM + " = '" + shopping_item_name + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
         if (c == null) {
@@ -192,7 +192,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //delete shoppingitem from database. returns number of deleted rows
     public int deleteItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(SHOPPING_TABLE, SHOPPING_ITEM + " = ?", new String[] {shoppingItem.getName()});
+        return db.delete(SHOPPING_TABLE, SHOPPING_ITEM + " = ?", new String[]{shoppingItem.getName()});
     }
 
     //insert shopping item into database
@@ -215,7 +215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE + " WHERE "
-                + CUPBOARD_ITEM+ " = " + cupboard_item_name;
+                + CUPBOARD_ITEM+ " = '" + cupboard_item_name + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
         if (c == null) {

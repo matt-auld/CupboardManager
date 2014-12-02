@@ -10,6 +10,8 @@ import android.widget.ShareActionProvider;
 
 import com.astuetz.PagerSlidingTabStrip;
 
+import java.util.List;
+
 
 public class MainActivity extends FragmentActivity {
 
@@ -46,6 +48,7 @@ public class MainActivity extends FragmentActivity {
         return true;
     }
 
+    //shares the shopping list as a plaintext list of item names
     private void setShareIntent() {
 
         if (mShareActionProvider != null) {
@@ -53,9 +56,17 @@ public class MainActivity extends FragmentActivity {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Shopping List");
-            //TODO: get text from somewhere appropriate. will need to setShareIntent() whenever this changes
-            //shareIntent.putExtra(Intent.EXTRA_TEXT, mainTextView.getText());
 
+            //TODO: setShareIntent() whenever the shopping list changes
+            DatabaseHandler db = new DatabaseHandler(MainActivity.this);
+            String s = "";
+            List<CupboardItem> listOfItems = db.fetchAllCupboardItems();
+            for (int i = 0; i < listOfItems.size(); i++) {
+                s += listOfItems.get(i).getName();
+                s += "\n";
+            }
+
+            shareIntent.putExtra(Intent.EXTRA_TEXT, s);
             mShareActionProvider.setShareIntent(shareIntent);
         }
     }
