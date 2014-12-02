@@ -17,16 +17,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Item table name
-    private static final String ITEM_TABLE = "Item";
+    public static final String ITEM_TABLE = "Item";
     // Item table column names
-    private static final String ITEM_ID = "_ID";
+    public static final String ITEM_ID = "_ID";
+    public static final String ITEM_NAME = "name";
     private static final String ITEM_TAGS = "tags";
 
     // Shopping table name
-    private static final String SHOPPING_TABLE = "shopping";
+    public static final String SHOPPING_TABLE = "shopping";
     // Shopping table columns
     private static final String SHOPPING_ID = "_ID";
-    private static final String SHOPPING_ITEM = "item_fk";
+    public static final String SHOPPING_ITEM = "item_fk";
     private static final String SHOPPING_QUANTITY = "quantity";
 
     // Cupboard table name
@@ -50,7 +51,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_ITEM_TABLE = "CREATE TABLE " + ITEM_TABLE + "(" +
-                ITEM_ID + " TEXT PRIMARY KEY, " +
+                ITEM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                ITEM_NAME + " TEXT, " +
                 ITEM_TAGS + " TEXT" + ")";
 
         final String CREATE_SHOPPING_TABLE = "CREATE TABLE " + SHOPPING_TABLE + "(" +
