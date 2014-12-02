@@ -1,22 +1,19 @@
 package com.mobile.cupboardmanager;
 
-import com.astuetz.PagerSlidingTabStrip;
-import com.mobile.cupboardmanager.TabsPagerAdapter;
-
-import android.app.ActionBar;
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ShareActionProvider;
 
-import java.util.ArrayList;
+import com.astuetz.PagerSlidingTabStrip;
+
 
 public class MainActivity extends FragmentActivity {
+
+    ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +30,37 @@ public class MainActivity extends FragmentActivity {
         tabs.setViewPager(pager);
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        MenuItem shareItem = menu.findItem(R.id.menu_item_share);
+
+        if (shareItem != null) {
+            mShareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+        }
+
+        setShareIntent();
+
         return true;
     }
 
+    private void setShareIntent() {
+
+        if (mShareActionProvider != null) {
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Shopping List");
+            //TODO: get text from somewhere appropriate. will need to setShareIntent() whenever this changes
+            //shareIntent.putExtra(Intent.EXTRA_TEXT, mainTextView.getText());
+
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -3,7 +3,6 @@ package com.mobile.cupboardmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,8 +72,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
                 mCupboardItem.setQuantity(itemQuantity);
                 mCupboardItem.setExpiry_time_ms(mDatePicker.getCalendarView().getDate());
                 if (mIsEditMode) {
-                    // TODO: we still need to implement this api call
-                    //databaseHandler.updateCupboardItem(mCupboardItem);
+                    databaseHandler.updateItem(mCupboardItem);
                 } else {
                     databaseHandler.insertItem(mCupboardItem);
                 }

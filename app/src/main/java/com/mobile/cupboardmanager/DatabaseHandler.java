@@ -257,6 +257,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cupboardItems;
     }
 
+    //update cupboard item
+    public int updateItem(CupboardItem cupboardItem) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(CUPBOARD_ITEM, cupboardItem.getName());
+        values.put(CUPBOARD_QUANTITY, cupboardItem.getQuantity());
+        values.put(CUPBOARD_EXPIRY_TIME, cupboardItem.getExpiry_time_ms());
+        values.put(CUPBOARD_NOTIFICATION_ID, cupboardItem.getNotification_id());
+
+        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[] {cupboardItem.getName()});
+    }
+
     //delete cupboard item from database. returns number of deleted rows
     public int deleteItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
