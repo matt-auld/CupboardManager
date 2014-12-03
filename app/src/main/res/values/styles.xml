@@ -5,4 +5,9 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="PagerSlidingTabStrip">
+        <item name="pstsShouldExpand">true</item>
+        <item name="pstsIndicatorColor">@color/blue</item>
+    </style>
+
 </resources>
