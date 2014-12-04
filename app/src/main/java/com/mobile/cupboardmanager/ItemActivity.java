@@ -7,13 +7,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -123,6 +126,13 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
 
         mDatabaseHandler = new DatabaseHandler(ItemActivity.this);
         mDatePicker = (DatePicker)findViewById(R.id.datePicker);
+
+        List<Item> items = new ArrayList<Item>();
+        AutoCompleteItemAdapter autoCompleteItemAdapter = new AutoCompleteItemAdapter(this,
+                R.layout.layout_auto_complete_item, items);
+        AutoCompleteTextView autoCompleteTextView =
+                (AutoCompleteTextView) findViewById(R.id.item_name);
+        autoCompleteTextView.setAdapter(autoCompleteItemAdapter);
 
         SeekBar seekBar = ((SeekBar)findViewById(R.id.item_quantity_seek_bar));
         seekBar.setOnSeekBarChangeListener(this);

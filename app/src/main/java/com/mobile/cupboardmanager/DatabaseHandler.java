@@ -106,6 +106,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return item;
     }
 
+    public List<Item> fetchAllItemsLike(String constraint) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<Item> items = new ArrayList<Item>();
+
+        Cursor c = db.query(ITEM_TABLE, new String[] {ITEM_ID}, ITEM_ID+" LIKE ?",
+                new String[]{"%"+constraint+"%"}, null, null, null);
+
+        while(c.moveToNext()) {
+            Item item = new Item();
+            item.setName(c.getString(c.getColumnIndex(ITEM_ID)));
+            items.add(item);
+        }
+
+        return items;
+    }
+
     //update item in database. returns number of updated rows. not sure this even makes sense
     public int updateItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
