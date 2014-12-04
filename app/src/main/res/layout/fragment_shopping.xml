@@ -18,7 +18,7 @@
         android:padding="0dp"
         android:text="+"
         android:textSize="50sp"
-        android:background="@color/blue"
+        android:background="@drawable/shopping_button"
         android:textColor="@color/white" />
 
 </LinearLayout>

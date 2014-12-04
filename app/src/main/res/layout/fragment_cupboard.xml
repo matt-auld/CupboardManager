@@ -18,7 +18,7 @@
             android:padding="0dp"
             android:text="+"
             android:textSize="50sp"
-            android:background="@color/green"
+            android:background="@drawable/cupboard_button"
             android:textColor="@color/white" />
 
 </LinearLayout>
