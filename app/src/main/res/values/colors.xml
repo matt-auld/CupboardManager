@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="green">#FF41873D</color>
+    <color name="light_green">#FF92CC47</color>
+    <color name="green">#FF326342</color>
+    <color name="dark_green">#FF234F32</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue">#FF0da0f9</color>
-    <color name="opaque_blue">#10457DEC</color>
-    <color name="light_blue">#FFc8e2ec</color>
+    <color name="listview_blue">#445ba9dd</color>
+    <color name="light_blue">#FF5ba9dd</color>
+    <color name="blue">#FF29367b</color>
+    <color name="dark_blue">#FF121d43</color>
+    <color name="grey">#FFE2DEE3</color>
+    <color name="transparent">#00000000</color>
 </resources>

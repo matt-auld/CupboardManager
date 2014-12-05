@@ -2,13 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="20sp"
-    android:paddingBottom="20sp"
-    android:background="@color/opaque_blue">
+    android:padding="20sp"
+    android:background="@drawable/shoppinglistview">
 
-
-
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+"
@@ -20,11 +17,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Item"
         android:id="@+id/shopping_item"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="30sp"
-        android:textSize="30sp"/>
+        android:paddingLeft="30sp"/>-->
+
+    <CheckBox android:id="@+id/checkbox_meat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Item"
+        android:padding="15sp"
+        android:paddingLeft="20sp"
+        android:layout_gravity="center_vertical" />
 
 </LinearLayout>
