@@ -311,7 +311,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (c.moveToFirst()) {
             do {
-                long expire_date = c.getColumnIndex(CUPBOARD_EXPIRY_TIME);
+                long expire_date = c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME));
                 String dateString= DateFormat.format("dd-MM-yyyy", new Date(expire_date)).toString();
                 //System.out.println("Current datestring =; "+ dateString);
                 if (dateString.equals(d)) {
