@@ -26,25 +26,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Item table name
     public static final String ITEM_TABLE = "Item";
     // Item table column names
-    public static final String ITEM_ID = "_ID";
+    public static final String ITEM_ID = "_id";
     public static final String ITEM_NAME = "name";
     private static final String ITEM_TAGS = "tags";
 
     // Shopping table name
     public static final String SHOPPING_TABLE = "shopping";
     // Shopping table columns
-    public static final String SHOPPING_ID = "_ID";
+    public static final String SHOPPING_ID = "_id";
     public static final String SHOPPING_ITEM = "item_fk";
     public static final String SHOPPING_QUANTITY = "quantity";
 
     // Cupboard table name
-    private static final String CUPBOARD_TABLE = "cupboard";
+    public static final String CUPBOARD_TABLE = "cupboard";
     // Cupboard table columns
-    private static final String CUPBOARD_ID = "_ID";
-    private static final String CUPBOARD_ITEM = "item_fk";
-    private static final String CUPBOARD_QUANTITY = "quantity";
-    private static final String CUPBOARD_EXPIRY_TIME = "expiry_time_ms";
-    private static final String CUPBOARD_NOTIFICATION_ID = "notification_id";
+    public static final String CUPBOARD_ID = "_id";
+    public static final String CUPBOARD_ITEM = "item_fk";
+    public static final String CUPBOARD_QUANTITY = "quantity";
+    public static final String CUPBOARD_EXPIRY_TIME = "expiry_time_ms";
+    public static final String CUPBOARD_NOTIFICATION_ID = "notification_id";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
