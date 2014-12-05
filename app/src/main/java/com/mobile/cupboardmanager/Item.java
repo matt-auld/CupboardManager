@@ -13,6 +13,10 @@ public class Item implements Parcelable {
     public Item() {
     }
 
+    public Item(String name) {
+        this.name = name;
+    }
+
     public Item(Parcel in) {
         readFromParcel(in);
     }
@@ -28,10 +32,6 @@ public class Item implements Parcelable {
             return new Item[0];
         }
     };
-
-    public Item(String name) {
-        this.name = name;
-    }
 
     // setters
     public void setName(String name) {

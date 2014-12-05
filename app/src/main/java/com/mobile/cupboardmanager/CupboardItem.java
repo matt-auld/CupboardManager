@@ -24,12 +24,12 @@ public class CupboardItem implements Parcelable {
         this.name = name;
     }
 
-    CupboardItem(String name, int quantity) {
+    public CupboardItem(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
     }
 
-    CupboardItem(String name, int quantity, int expiry_time_ms) {
+    public CupboardItem(String name, int quantity, int expiry_time_ms) {
         this.name = name;
         this.quantity = quantity;
         this.expiry_time_ms = expiry_time_ms;
