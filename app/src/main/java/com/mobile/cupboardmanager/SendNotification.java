@@ -35,7 +35,7 @@ public class SendNotification {
 
         // This image is used as the notification's large icon (thumbnail).
         // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.ic_cm);
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.ic_launcher);
 
         final String ticker = textString;
         final String title = textString;
@@ -50,7 +50,7 @@ public class SendNotification {
                 // Set appropriate defaults for the notification light, sound,
                 // and vibration.
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setSmallIcon(R.drawable.ic_stat_name)
+                .setSmallIcon(R.drawable.ic_notification_small)
                 .setContentTitle(title)
                         // Use a default priority (recognized on devices running Android
                         // 4.1 or later)
