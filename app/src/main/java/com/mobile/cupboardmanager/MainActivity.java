@@ -39,6 +39,8 @@ public class MainActivity extends FragmentActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.cupboard_list_container,
                     cupboardFragment).commit();
         }
+        Intent intent = new Intent(this, RunService.class);
+        sendBroadcast(intent);
     }
 
     @Override

@@ -7,10 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
-
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
+import android.text.format.DateFormat;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -354,6 +356,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int deleteItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(CUPBOARD_TABLE, CUPBOARD_ITEM + " = ?", new String[] {cupboardItem.getName()});
+    }
+
+
+    //fetch cupboard item from database, using the name (foreign key from item)
+    public List<String> ItemsOutOfDate() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> Items = new ArrayList<String>();
+
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String d = sdf.format(date);
+
+        //System.out.println("Current datestring =; "+ d);
+        String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE;
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.moveToFirst()) {
+            do {
+                long expire_date = c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME));
+                String dateString= DateFormat.format("dd-MM-yyyy", new Date(expire_date)).toString();
+                //System.out.println("Current datestring =; "+ dateString);
+                if (dateString.equals(d)) {
+                    String record = c.getString(c.getColumnIndex(CUPBOARD_ITEM));
+                    //System.out.println("Success =; ");
+                    Items.add(record);
+                }
+            } while (c.moveToNext());
+        }
+        return Items;
     }
 }
 
