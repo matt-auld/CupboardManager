@@ -46,8 +46,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String CUPBOARD_EXPIRY_TIME = "expiry_time_ms";
     public static final String CUPBOARD_NOTIFICATION_ID = "notification_id";
 
+    private Context mContext;
+
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
     /**
@@ -80,7 +83,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        mContext.deleteDatabase(DATABASE_NAME);
     }
 
     //insert item into database
