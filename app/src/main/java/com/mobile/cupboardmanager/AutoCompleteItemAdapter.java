@@ -1,6 +1,7 @@
 package com.mobile.cupboardmanager;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,21 +9,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.TextView;
 
+import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by matt-auld on 02/12/14.
  */
-public class AutoCompleteItemAdapter extends ArrayAdapter<Item> {
+public class AutoCompleteItemAdapter extends ArrayAdapter<String> {
 
-    private ArrayList<Item> mItems;
+    private ArrayList<String> mItemNames;
 
     private Filter mFilter = new Filter() {
 
         @Override
         public String convertResultToString(Object resultValue) {
-            return ((Item)resultValue).getName();
+            return (String)resultValue;
         }
 
         @Override
@@ -30,7 +33,7 @@ public class AutoCompleteItemAdapter extends ArrayAdapter<Item> {
             FilterResults filterResults = new FilterResults();
 
             if (constraint != null) {
-                List<Item> matches = queryItems(constraint);
+                List<String> matches = queryItems(constraint);
                 filterResults.values = matches;
                 filterResults.count = matches.size();
             }
@@ -42,16 +45,16 @@ public class AutoCompleteItemAdapter extends ArrayAdapter<Item> {
         protected void publishResults(CharSequence constraint, FilterResults results) {
             if (results != null && results.count > 0) {
                 clear();
-                ArrayList<Item> matches = (ArrayList<Item>)results.values;
-                for (Item item : matches) {
-                    add(item);
+                ArrayList<String> matches = (ArrayList<String>)results.values;
+                for (String itemName : matches) {
+                    add(itemName);
                 }
                 notifyDataSetChanged();
             }
         }
     };
 
-    public AutoCompleteItemAdapter(Context context, int res, List<Item> items) {
+    public AutoCompleteItemAdapter(Context context, int res, List<String> items) {
         super(context, res, items);
     }
 
@@ -63,8 +66,8 @@ public class AutoCompleteItemAdapter extends ArrayAdapter<Item> {
                     Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.layout_auto_complete_item, null);
         }
-        Item item = getItem(pos);
-        ((TextView)view.findViewById(R.id.name)).setText(item.getName());
+        String itemName = getItem(pos);
+        ((TextView)view.findViewById(R.id.name)).setText(itemName);
 
         return view;
     }
@@ -74,10 +77,18 @@ public class AutoCompleteItemAdapter extends ArrayAdapter<Item> {
         return mFilter;
     }
 
-    private List<Item> queryItems(CharSequence constraint) {
-        DatabaseHandler db = new DatabaseHandler(getContext());
-        List<Item> items = db.fetchAllItemsLike(constraint.toString());
-        db.close();
-        return items;
+    private List<String> queryItems(CharSequence constraint) {
+        Cursor cursor = getContext().getContentResolver().query(DBContentProvider.ITEMS.CONTENT_URI,
+                new String[] {DBContentProvider.ITEMS.Name}, DBContentProvider.ITEMS.Name +
+                        " LIKE ?", new String[]{"%"+constraint+"%"}, null);
+
+        List<String> matchingItemNames = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String name =  cursor.getString(cursor.getColumnIndex(DBContentProvider.ITEMS.Name));
+            matchingItemNames.add(name);
+        }
+
+        cursor.close();
+        return matchingItemNames;
     }
 }

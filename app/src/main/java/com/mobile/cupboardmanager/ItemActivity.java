@@ -94,7 +94,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         mDatePicker = (DatePicker)findViewById(R.id.datePicker);
 
         // TODO: need to fix this up
-        List<Item> items = new ArrayList<Item>();
+        List<String> items = new ArrayList<String>();
         AutoCompleteItemAdapter autoCompleteItemAdapter = new AutoCompleteItemAdapter(this,
                 R.layout.layout_auto_complete_item, items);
         AutoCompleteTextView autoCompleteTextView =
