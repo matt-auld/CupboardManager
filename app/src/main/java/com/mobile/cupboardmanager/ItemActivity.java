@@ -1,7 +1,11 @@
 package com.mobile.cupboardmanager;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +17,8 @@ import android.widget.DatePicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,61 +32,26 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
 
     private static final String TAG = "cupboardmanager.ItemActivity";
 
-    /** Intent extra name for item Object **/
-    public static final String ITEM_INTENT_EXTRA = "item_object";
-    /** Intent extra name for item Object type **/
-    public static final String ITEM_TYPE_INTENT_EXTRA = "item_type";
-    /** Standard Item types to be used for: ITEM_TYPE_INTENT_EXTRA **/
-    public static final int ITEM_SHOPPING_TYPE = 666;
-    public static final int ITEM_CUPBOARD_TYPE = 999;
+    /** Intent extra DBContentProvider CONTENT_URI **/
+    public static final String INTENT_ITEM_URI = "item_uri";
+    /** Intent extra Item _ID **/
+    public static final String INTENT_ITEM_ID = "item_id";
 
     // Min-value for item quantity seek bar
     private static final int SEEK_OFFSET = 1;
 
     // Hold the value of the expiry date throughout the lifetime of the activity
     private boolean mIsEditMode;
-    private int mObjectType;
-    private ShoppingItem mShoppingItem;
-    private CupboardItem mCupboardItem;
-    private DatabaseHandler mDatabaseHandler;
     private DatePicker mDatePicker;
+    private TextView mTextViewName;
+    private Uri itemUri;
+    private long mItemId;
 
     // OnSubmit we write the form-data to its representative object and save it to the db
     private View.OnClickListener mOnSubmitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final String itemName = ((TextView)findViewById(R.id.item_name)).getText().toString().trim();
-            if (itemName.isEmpty()) {
-                Toast.makeText(ItemActivity.this, getString(R.string.item_name_empty_error),
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-            final int itemQuantity = Integer.parseInt(((TextView) findViewById(R.id.item_quantity)).
-                    getText().toString());
-
-            Item newItem = new Item(itemName);
-            final DatabaseHandler databaseHandler = new DatabaseHandler(ItemActivity.this);
-            databaseHandler.insertItem(newItem);
-
-            if (mObjectType == ITEM_SHOPPING_TYPE) {
-                mShoppingItem.setName(itemName);
-                mShoppingItem.setQuantity(itemQuantity);
-                if (mIsEditMode) {
-                    databaseHandler.updateItem(mShoppingItem);
-                } else {
-                    databaseHandler.insertItem(mShoppingItem);
-                }
-            } else {
-                mCupboardItem.setName(itemName);
-                mCupboardItem.setQuantity(itemQuantity);
-                mCupboardItem.setExpiry_time_ms(mDatePicker.getCalendarView().getDate());
-                if (mIsEditMode) {
-                    databaseHandler.updateItem(mCupboardItem);
-                } else {
-                    databaseHandler.insertItem(mCupboardItem);
-                }
-            }
-            finish();
+            saveData();
         }
     };
 
@@ -105,11 +76,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.delete_item:
-                if (mObjectType == ITEM_CUPBOARD_TYPE) {
-                    mDatabaseHandler.deleteItem(mCupboardItem);
-                } else {
-                    mDatabaseHandler.deleteItem(mShoppingItem);
-                }
+                getContentResolver().delete(ContentUris.withAppendedId(itemUri, mItemId), null, null);
                 Toast.makeText(ItemActivity.this, getString(R.string.item_deleted),
                         Toast.LENGTH_SHORT).show();
                 finish();
@@ -124,9 +91,9 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_activity);
 
-        mDatabaseHandler = new DatabaseHandler(ItemActivity.this);
         mDatePicker = (DatePicker)findViewById(R.id.datePicker);
 
+        // TODO: need to fix this up
         List<Item> items = new ArrayList<Item>();
         AutoCompleteItemAdapter autoCompleteItemAdapter = new AutoCompleteItemAdapter(this,
                 R.layout.layout_auto_complete_item, items);
@@ -134,42 +101,16 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
                 (AutoCompleteTextView) findViewById(R.id.item_name);
         autoCompleteTextView.setAdapter(autoCompleteItemAdapter);
 
-        SeekBar seekBar = ((SeekBar)findViewById(R.id.item_quantity_seek_bar));
-        seekBar.setOnSeekBarChangeListener(this);
-
         Intent intent = getIntent();
-        // Attempt to retrieve the item, i.e cupboard or shopping item
-        final Object item = intent.getExtras().get(ITEM_INTENT_EXTRA);
-        // If were passed an existing item object then we must be in edit mode
-        mIsEditMode = (item != null);
+        itemUri = intent.getExtras().getParcelable(INTENT_ITEM_URI);
+        // Attempt to retrieve the item ID, i.e cupboard or shopping item
+        mItemId = intent.getExtras().getInt(INTENT_ITEM_ID, -1);
+        // If were passed an existing item ID then we must be in edit mode
+        mIsEditMode = (mItemId != -1);
 
         String actionContext = (mIsEditMode ? getString(R.string.activity_item_title_edit) :
                 getString(R.string.activity_item_title_create));
         StringBuilder activityTitleBuilder = new StringBuilder(actionContext);
-
-        mObjectType = intent.getExtras().getInt(ITEM_TYPE_INTENT_EXTRA);
-        switch (mObjectType) {
-            case ITEM_CUPBOARD_TYPE:
-                if (mIsEditMode) {
-                    mCupboardItem = (CupboardItem) item;
-                } else {
-                    mCupboardItem = new CupboardItem();
-                }
-                loadUIForItem(mCupboardItem);
-                activityTitleBuilder.append(getString(R.string.title_cupboard_item));
-                break;
-            case ITEM_SHOPPING_TYPE:
-                if (mIsEditMode) {
-                    mShoppingItem = (ShoppingItem) item;
-                } else {
-                    mShoppingItem = new ShoppingItem();
-                }
-                loadUIForItem(mShoppingItem);
-                activityTitleBuilder.append(getString(R.string.title_shopping_item));
-                break;
-            default:
-                throw new RuntimeException("Unknown item type");
-        }
 
         final Button submitBtn = (Button)findViewById(R.id.submit);
         submitBtn.setText(actionContext);
@@ -177,43 +118,128 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
 
         findViewById(R.id.cancel).setOnClickListener(mOnCancelOnClickListener);
 
-        getActionBar().setTitle(activityTitleBuilder.toString());
-    }
+        mTextViewName = ((TextView) findViewById(R.id.item_name));
+        SeekBar mSeekBarQuantity = ((SeekBar) findViewById(R.id.item_quantity_seek_bar));
+        mSeekBarQuantity.setOnSeekBarChangeListener(this);
 
-    /**
-     * Load the UI with the data from the item and set up the necessary event handlers
-     * @param item the shopping item to be edited
-     */
-    private void loadUIForItem(ShoppingItem item) {
-        // We don't need the expiry related view's for shopping items
-        findViewById(R.id.item_expiry_date).setVisibility(View.GONE);
-        findViewById(R.id.item_notify_me).setVisibility(View.GONE);
-        findViewById(R.id.datePicker).setVisibility(View.GONE);
-
-        // Load fields with object data
-        ((TextView)findViewById(R.id.item_name)).setText(item.getName());
-        setItemQuantity(item.getQuantity());
-    }
-
-    /**
-     * Load the UI with the data from the item and set up the necessary event handlers
-     * @param item the cupboard item to be edited
-     */
-    private void loadUIForItem(CupboardItem item) {
-        // Load fields with object data
-        ((TextView)findViewById(R.id.item_name)).setText(item.getName());
-
-        // We need to subtract 1 second here otherwise DatePicker will throw an exception
-        // since the minimum date cannot be set to now
-        long currentTimeMs = Calendar.getInstance().getTimeInMillis() - TimeUnit.SECONDS.toMillis(1);
-        long itemExpiryMs = item.getExpiry_time_ms();
-        if (itemExpiryMs > 0) {
-            mDatePicker.setMinDate((itemExpiryMs < currentTimeMs) ? itemExpiryMs : currentTimeMs);
-            mDatePicker.getCalendarView().setDate(itemExpiryMs);
+        if (itemUri.compareTo(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI) == 0) {
+            activityTitleBuilder.append(getResources().getString(R.string.title_cupboard_item));
         } else {
-            mDatePicker.setMinDate(currentTimeMs);
+            activityTitleBuilder.append(getResources().getString(R.string.title_shopping_item));
+            // We don't need the expiry related view's for shopping items
+            findViewById(R.id.item_expiry_date).setVisibility(View.GONE);
+            findViewById(R.id.item_notify_me).setVisibility(View.GONE);
+            findViewById(R.id.datePicker).setVisibility(View.GONE);
         }
-        setItemQuantity(item.getQuantity());
+        getActionBar().setTitle(activityTitleBuilder.toString());
+
+        if (mIsEditMode) {
+            fillData();
+        }
+    }
+
+    /**
+     * Given the item id fetch the corresponding item name
+     * @param id of the item
+     * @return the string name for the item
+     */
+    private String getItemName(long id) {
+        String name = null;
+        Cursor c = getContentResolver().query(ContentUris.withAppendedId(
+                        DBContentProvider.ITEMS.CONTENT_URI, id), null, null, null, null);
+        if (c.moveToFirst()) {
+            name = c.getString(c.getColumnIndex(DBContentProvider.ITEMS.Name));
+        }
+        c.close();
+        return name;
+    }
+
+    /**
+     * Load the data from the URI and _ID and fill the form
+     */
+    private void fillData() {
+        Cursor c = getContentResolver().query(ContentUris.withAppendedId(itemUri, mItemId), null,
+                null, null, null);
+        if (c.moveToFirst()) {
+            String itemName = getItemName(c.getLong(c.getColumnIndex(DatabaseHandler.SHOPPING_ITEM)));
+            int itemQuantity = c.getInt(c.getColumnIndex(DatabaseHandler.SHOPPING_QUANTITY));
+
+            mTextViewName.setText(itemName);
+            setItemQuantity(itemQuantity);
+
+            if (itemUri.compareTo(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI) == 0) {
+                // We need to subtract 1 second here otherwise DatePicker will throw an exception
+                // since the minimum date cannot be set to now
+                long currentTimeMs = Calendar.getInstance().getTimeInMillis() - TimeUnit.SECONDS.toMillis(1);
+                long itemExpiryMs = c.getLong(c.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
+                if (itemExpiryMs > 0) {
+                    mDatePicker.setMinDate((itemExpiryMs < currentTimeMs) ? itemExpiryMs : currentTimeMs);
+                    mDatePicker.getCalendarView().setDate(itemExpiryMs);
+                } else {
+                    mDatePicker.setMinDate(currentTimeMs);
+                }
+            }
+            c.close();
+        }
+    }
+
+    /**
+     * This will query for an existing Item with matching itemName, otherwise it will create it
+     * @param itemName the item name
+     * @return the row ID of the existing/new item
+     */
+    private long saveItem(String itemName) {
+        // Query for existence of Item with name equal to itemName
+        Cursor c = getContentResolver().query(DBContentProvider.ITEMS.CONTENT_URI,
+                new String[] {DBContentProvider.ITEMS._ID},
+                DBContentProvider.ITEMS.Name + " ='" + itemName + "'", null, null);
+        long itemId;
+        // If the item already exits we grab its ID otherwise we create it and get its ID
+        if (c.moveToFirst()) {
+            itemId = c.getLong(c.getColumnIndex(DatabaseHandler.ITEM_ID));
+        } else {
+            ContentValues itemValues = new ContentValues();
+            itemValues.put(DBContentProvider.ITEMS.Name, itemName);
+            Uri uri = getContentResolver().insert(DBContentProvider.ITEMS.CONTENT_URI, itemValues);
+            itemId = Long.parseLong(uri.getPathSegments().get(1));
+        }
+        c.close();
+        return itemId;
+    }
+
+    /**
+     * Write to the DB the state of the form
+     */
+    private void saveData() {
+        String itemName = mTextViewName.getText().toString();
+        if (itemName.isEmpty()) {
+            Toast.makeText(ItemActivity.this, getString(R.string.item_name_empty_error),
+                        Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final int itemQuantity = Integer.parseInt(((TextView) findViewById(R.id.item_quantity)).
+                getText().toString());
+
+        // Create/Query the item returning its ID
+        long itemId = saveItem(itemName);
+        // Save common data
+        ContentValues itemValues = new ContentValues();
+        itemValues.put(DBContentProvider.SHOPPING_ITEMS.Item, itemId);
+        itemValues.put(DBContentProvider.SHOPPING_ITEMS.Quantity, itemQuantity);
+
+        if (itemUri.compareTo(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI) == 0) {
+            itemValues.put(DBContentProvider.CUPBOARD_ITEMS.Expiry_Time,
+                    mDatePicker.getCalendarView().getDate());
+        }
+
+        if (mIsEditMode) {
+            getContentResolver().update(ContentUris.withAppendedId(itemUri, mItemId), itemValues,
+                    null, null);
+        } else {
+            getContentResolver().insert(itemUri, itemValues);
+        }
+
+        finish();
     }
 
     /**
