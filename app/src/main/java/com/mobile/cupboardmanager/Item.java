@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by Sam on 26/11/14.
  */
 public class Item implements Parcelable {
-    String name; //used as id in database
+    String name;
 
     // constructors
     public Item() {
