@@ -6,9 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.util.Log;
-import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 import android.text.format.DateFormat;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -225,8 +224,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ShoppingItem item = new ShoppingItem();
                 item.setQuantity(c.getInt((c.getColumnIndex(SHOPPING_QUANTITY))));
                 item.setName((c.getString(c.getColumnIndex(SHOPPING_ITEM))));
-
-                // adding to todo list
                 shoppingItems.add(item);
             } while (c.moveToNext());
         }
@@ -330,8 +327,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 item.setQuantity(c.getInt((c.getColumnIndex(CUPBOARD_QUANTITY))));
                 item.setExpiry_time_ms(c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
                 item.setNotification_id(c.getInt(c.getColumnIndex(CUPBOARD_NOTIFICATION_ID)));
-
-                // adding to todo list
                 cupboardItems.add(item);
             } while (c.moveToNext());
         }

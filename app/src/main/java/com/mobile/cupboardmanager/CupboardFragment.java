@@ -75,7 +75,7 @@ public class CupboardFragment extends Fragment implements
         // Fields on the UI to map to
         int[] to = new int[] { R.id.shopping_item };
 
-        adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.shoppingrow, null, from,
+        adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.cupboardrow, null, from,
                 to, 0);
 
         ListView listView = (ListView)rootView.findViewById(R.id.cupboard_list);

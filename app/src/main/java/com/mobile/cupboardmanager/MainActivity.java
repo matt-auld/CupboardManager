@@ -4,8 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ShareActionProvider;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -41,7 +45,21 @@ public class MainActivity extends FragmentActivity {
         }
         Intent intent = new Intent(this, RunService.class);
         sendBroadcast(intent);
+
+        //Shopping item checkbox listener
+        CheckBox itemCheckbox = (CheckBox) findViewById(R.id.item_checkbox);
+        if(itemCheckbox != null) {
+            itemCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    //TODO: remove item from shopping list, and add to cupboard list
+                    Log.d("Checkbox","Checkbox listener called");
+                }
+            });
+        }
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +97,10 @@ public class MainActivity extends FragmentActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, s);
             mShareActionProvider.setShareIntent(shareIntent);
         }
+    }
+
+    public void onNeedMoreButtonClick(View view) {
+        //TODO: remove item from cupboard list, and add to shopping list
     }
 
     /*
