@@ -231,8 +231,16 @@ public class DBContentProvider extends ContentProvider {
             case ITEM:
                 updatedRows = db.update(DatabaseHandler.ITEM_TABLE, contentValues, where, whereArgs);
                 break;
+            case SHOPPING_ITEM_ID:
+                updatedRows = db.update(DatabaseHandler.SHOPPING_TABLE, contentValues,
+                        DatabaseHandler.SHOPPING_ID + " =" + uri.getLastPathSegment(), null);
+                break;
             case SHOPPING_ITEM:
                 updatedRows = db.update(DatabaseHandler.SHOPPING_TABLE, contentValues, where, whereArgs);
+                break;
+            case CUPBOARD_ITEM_ID:
+                updatedRows = db.update(DatabaseHandler.CUPBOARD_TABLE, contentValues,
+                        DatabaseHandler.CUPBOARD_ID + " =" + uri.getLastPathSegment(), null);
                 break;
             case CUPBOARD_ITEM:
                 updatedRows = db.update(DatabaseHandler.CUPBOARD_TABLE, contentValues, where, whereArgs);
