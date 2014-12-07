@@ -195,8 +195,16 @@ public class DBContentProvider extends ContentProvider {
             case ITEM:
                 deletedRows = db.delete(DatabaseHandler.ITEM_TABLE, where, whereArgs);
                 break;
+            case SHOPPING_ITEM_ID:
+                deletedRows = db.delete(DatabaseHandler.SHOPPING_TABLE,
+                        DatabaseHandler.SHOPPING_ID + " =" + uri.getLastPathSegment(), whereArgs);
+                break;
             case SHOPPING_ITEM:
                 deletedRows = db.delete(DatabaseHandler.SHOPPING_TABLE, where, whereArgs);
+                break;
+            case CUPBOARD_ITEM_ID:
+                deletedRows = db.delete(DatabaseHandler.CUPBOARD_TABLE,
+                        DatabaseHandler.CUPBOARD_ID + " =" + uri.getLastPathSegment(), whereArgs);
                 break;
             case CUPBOARD_ITEM:
                 deletedRows = db.delete(DatabaseHandler.CUPBOARD_TABLE, where, whereArgs);
