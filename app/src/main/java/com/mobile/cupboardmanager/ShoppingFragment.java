@@ -1,6 +1,7 @@
 package com.mobile.cupboardmanager;
 
 
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,8 +34,8 @@ public class ShoppingFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ItemActivity.class);
-                intent.putExtra(ItemActivity.ITEM_TYPE_INTENT_EXTRA,
-                        ItemActivity.ITEM_SHOPPING_TYPE);
+                intent.putExtra(ItemActivity.INTENT_ITEM_URI,
+                        DBContentProvider.SHOPPING_ITEMS.CONTENT_URI);
                 startActivity(intent);
             }
         });

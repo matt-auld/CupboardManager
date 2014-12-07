@@ -31,8 +31,8 @@ public class CupboardFragment extends Fragment implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ItemActivity.class);
-                intent.putExtra(ItemActivity.ITEM_TYPE_INTENT_EXTRA,
-                        ItemActivity.ITEM_CUPBOARD_TYPE);
+                intent.putExtra(ItemActivity.INTENT_ITEM_URI,
+                        DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI);
                 startActivity(intent);
             }
         });
