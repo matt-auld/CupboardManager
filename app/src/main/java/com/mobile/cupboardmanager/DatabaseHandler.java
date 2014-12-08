@@ -6,12 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.text.format.DateFormat;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -100,58 +97,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return item_id;
     }
 
-    //fetch single item from database, given an item name
-    public Item fetchItem(String item_name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE + " WHERE "
-                + ITEM_NAME + " = '" + item_name + "'";
-
-        Cursor c = db.rawQuery(selectQuery, null);
-        if (c == null) {
-            return null;
-            //sensible thing to do if c is null?
-        }
-        c.moveToFirst();
-
-        Item item = new Item();
-        item.setName(c.getString(c.getColumnIndex(ITEM_NAME)));
-
-        return item;
-    }
-
-    public List<Item> fetchAllItemsLike(String constraint) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<Item> items = new ArrayList<Item>();
-
-        Cursor c = db.query(ITEM_TABLE, new String[]{ITEM_ID}, ITEM_ID + " LIKE ?",
-                new String[]{"%" + constraint + "%"}, null, null, null);
-
-        while (c.moveToNext()) {
-            Item item = new Item();
-            item.setName(c.getString(c.getColumnIndex(ITEM_ID)));
-            items.add(item);
-        }
-
-        return items;
-    }
-
-    //update item in database. returns number of updated rows. not sure this even makes sense
-    public int updateItem(Item item) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(ITEM_NAME, item.getName());
-
-        return db.update(ITEM_TABLE, values, ITEM_NAME + " = ?", new String[]{item.getName()});
-    }
-
-    //delete item from database. returns number of deleted rows
-    public int deleteItem(Item item) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(ITEM_TABLE, ITEM_NAME + " = ?", new String[]{item.getName()});
-    }
-
     //insert shopping item into database
     public long insertItem(ShoppingItem shoppingItem) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -189,27 +134,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return shopping_item_id;
     }
 
-    //fetch shopping item from database, using the name (foreign key from item)
-    public ShoppingItem fetchShoppingItem(String shopping_item_name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + SHOPPING_TABLE + " WHERE "
-                + SHOPPING_ITEM + " = '" + shopping_item_name + "'";
-
-        Cursor c = db.rawQuery(selectQuery, null);
-        if (c == null) {
-            return null;
-            //sensible thing to do if c is null?
-        }
-        c.moveToFirst();
-
-        ShoppingItem item = new ShoppingItem();
-        item.setName(c.getString(c.getColumnIndex(ITEM_NAME)));
-        item.setQuantity(c.getInt(c.getColumnIndex(CUPBOARD_QUANTITY)));
-
-        return item;
-    }
-
     //fetch all shopping items, as a list
     public List<ShoppingItem> fetchAllShoppingItems() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -228,23 +152,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return shoppingItems;
-    }
-
-    //update shopping item in database. returns number of updated rows. not sure this even makes sense
-    public int updateItem(ShoppingItem shoppingItem) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(SHOPPING_ITEM, shoppingItem.getName());
-        values.put(SHOPPING_QUANTITY, shoppingItem.getQuantity());
-
-        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[]{shoppingItem.getName()});
-    }
-
-    //delete shoppingitem from database. returns number of deleted rows
-    public int deleteItem(ShoppingItem shoppingItem) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(SHOPPING_TABLE, SHOPPING_ITEM + " = ?", new String[]{shoppingItem.getName()});
     }
 
     //insert shopping item into database
@@ -284,72 +191,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return cupboard_item_id;
     }
-
-    //fetch cupboard item from database, using the name (foreign key from item)
-    public CupboardItem fetchCupboardItem(String cupboard_item_name) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE + " WHERE "
-                + CUPBOARD_ITEM + " = '" + cupboard_item_name + "'";
-
-        Cursor c = db.rawQuery(selectQuery, null);
-        if (c == null) {
-            return null;
-            //sensible thing to do if c is null?
-        }
-        c.moveToFirst();
-
-        CupboardItem item = new CupboardItem();
-        item.setName(c.getString(c.getColumnIndex(CUPBOARD_ITEM)));
-        item.setQuantity(c.getInt(c.getColumnIndex(CUPBOARD_QUANTITY)));
-        item.setExpiry_time_ms(c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
-        item.setNotification_id(c.getInt(c.getColumnIndex(CUPBOARD_NOTIFICATION_ID)));
-
-        return item;
-    }
-
-    //fetch all cupboard items, as a list
-    public List<CupboardItem> fetchAllCupboardItems() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<CupboardItem> cupboardItems = new ArrayList<CupboardItem>();
-
-        String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE;
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-            do {
-                CupboardItem item = new CupboardItem();
-                item.setName((c.getString(c.getColumnIndex(CUPBOARD_ITEM))));
-                item.setQuantity(c.getInt((c.getColumnIndex(CUPBOARD_QUANTITY))));
-                item.setExpiry_time_ms(c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME)));
-                item.setNotification_id(c.getInt(c.getColumnIndex(CUPBOARD_NOTIFICATION_ID)));
-                cupboardItems.add(item);
-            } while (c.moveToNext());
-        }
-
-        return cupboardItems;
-    }
-
-    //update cupboard item
-    public int updateItem(CupboardItem cupboardItem) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(CUPBOARD_ITEM, cupboardItem.getName());
-        values.put(CUPBOARD_QUANTITY, cupboardItem.getQuantity());
-        values.put(CUPBOARD_EXPIRY_TIME, cupboardItem.getExpiry_time_ms());
-        values.put(CUPBOARD_NOTIFICATION_ID, cupboardItem.getNotification_id());
-
-        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[]{cupboardItem.getName()});
-    }
-
-    //delete cupboard item from database. returns number of deleted rows
-    public int deleteItem(CupboardItem cupboardItem) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(CUPBOARD_TABLE, CUPBOARD_ITEM + " = ?", new String[]{cupboardItem.getName()});
-    }
-
-
 }
-
 
