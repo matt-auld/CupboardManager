@@ -1,6 +1,9 @@
 package com.mobile.cupboardmanager.DBContentProviderTest;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.test.ProviderTestCase2;
 
 import com.mobile.cupboardmanager.CupboardItem;
@@ -32,22 +35,36 @@ public class ItemsBaseTest extends ProviderTestCase2<DBContentProvider> {
         DatabaseHandler dbHandler = new DatabaseHandler(mContext);
         dbHandler.getWritableDatabase();
 
+        provider = getProvider();
+        provider.setDBHandler(dbHandler);
+
         // Insert Example data
         ArrayList<String> itemData = new ArrayList<String>();
         itemData.add("Banana");
         itemData.add("Bread");
         itemData.add("Cheese");
 
+        ContentValues values = new ContentValues();
+
         for (int i = 0; i < itemData.size(); i++) {
             String name = itemData.get(i);
-            Item temp = new Item(name);
 
-            dbHandler.insertItem(temp);
-            dbHandler.insertItem(new CupboardItem(name, i, 1000 * i));
-            dbHandler.insertItem(new ShoppingItem(name, i));
+            values.put(DatabaseHandler.ITEM_NAME, name);
+            Uri uri = provider.insert(DBContentProvider.ITEMS.CONTENT_URI, values);
+            values.clear();
+
+            long itemId = ContentUris.parseId(uri);
+
+            values.put(DatabaseHandler.SHOPPING_ITEM, itemId);
+            values.put(DatabaseHandler.SHOPPING_QUANTITY, i);
+            provider.insert(DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, values);
+            values.clear();
+
+            values.put(DatabaseHandler.CUPBOARD_ITEM, itemId);
+            values.put(DatabaseHandler.CUPBOARD_QUANTITY, i);
+            values.put(DatabaseHandler.CUPBOARD_EXPIRY_TIME, 1000 * i);
+            provider.insert(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, values);
+            values.clear();
         }
-
-        provider = getProvider();
-        provider.setDBHandler(dbHandler);
     }
 }
