@@ -4,13 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ShareActionProvider;
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -46,29 +41,6 @@ public class MainActivity extends FragmentActivity {
         }
         Intent intent = new Intent(this, RunService.class);
         sendBroadcast(intent);
-
-        //Shopping item checkbox listener TODO: fix findviewbyid
-        CheckBox itemCheckbox = (CheckBox) findViewById(R.id.item_checkbox);
-        if(itemCheckbox != null) {
-            itemCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //TODO: remove item from shopping list, and add to cupboard list
-                    Log.d("Checkbox","Checkbox listener called");
-                }
-            });
-        }
-
-        //need more button listener TODO: fix findviewbyid
-        Button button = (Button)findViewById(R.id.button);
-        if(button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: remove item from cupboard list, and add to shopping list
-                }
-            });
-        }
     }
 
 

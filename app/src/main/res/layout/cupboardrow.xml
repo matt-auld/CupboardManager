@@ -6,11 +6,11 @@
     android:background="@drawable/cupboardlistview">
 
     <Button
-        android:layout_width="45sp"
-        android:layout_height="45sp"
-        android:text="NEED\nMORE"
-        android:textSize="10sp"
-        android:id="@+id/button"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:text="MOVE\nTO\nSHOPPING"
+        android:textSize="8sp"
+        android:id="@+id/needmorebutton"
         android:layout_gravity="center_vertical"
         android:background="@color/light_green"/>
 
