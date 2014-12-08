@@ -50,7 +50,7 @@ public class CupboardFragment extends Fragment implements
         // Columns to get
         String[] projection = {DBContentProvider.CUPBOARD_ITEMS._ID };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
-                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, projection, null, null, null);
+                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;
     }
 

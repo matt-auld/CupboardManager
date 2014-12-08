@@ -56,7 +56,7 @@ public class ShoppingFragment extends Fragment implements
         String[] projection = {DBContentProvider.SHOPPING_ITEMS._ID,
                 DBContentProvider.SHOPPING_ITEMS.Quantity };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
-                DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, projection, null, null, null);
+                DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;
     }
 
