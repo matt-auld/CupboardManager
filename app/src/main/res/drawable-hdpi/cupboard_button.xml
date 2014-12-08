@@ -6,11 +6,6 @@
                     android:startColor="@color/dark_green"
                     android:endColor="@color/green"
                     android:angle="315" />
-                <stroke
-                    android:width="3dp"
-                    android:color="@color/grey" />
-                <corners
-                    android:radius="3dp" />
             </shape>
         </item>
 
@@ -20,12 +15,6 @@
                     android:endColor="@color/dark_green"
                     android:startColor="@color/green"
                     android:angle="315" />
-                <stroke
-                    android:width="3dp"
-                    android:color="@color/grey" />
-                <corners
-                    android:radius="3dp" />
-
             </shape>
         </item>
 
@@ -35,12 +24,6 @@
                     android:endColor="@color/green"
                     android:startColor="@color/light_green"
                     android:angle="315" />
-                <stroke
-                    android:width="2dp"
-                    android:color="@color/grey" />
-                <corners
-                    android:radius="3dp" />
-
             </shape>
         </item>
 </selector>
