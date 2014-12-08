@@ -1,29 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-        <item android:state_pressed="true" >
-            <shape>
-                <gradient
-                    android:startColor="@color/dark_green"
-                    android:endColor="@color/green"
-                    android:angle="315" />
-            </shape>
-        </item>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" >
+        <shape>
+            <gradient
+                android:startColor="@color/dark_green"
+                android:endColor="@color/green"
+                android:angle="315" />
+        </shape>
+    </item>
 
-        <item android:state_focused="true" >
-            <shape>
-                <gradient
-                    android:endColor="@color/dark_green"
-                    android:startColor="@color/green"
-                    android:angle="315" />
-            </shape>
-        </item>
+    <item android:state_focused="true" >
+        <shape>
+            <gradient
+                android:endColor="@color/dark_green"
+                android:startColor="@color/green"
+                android:angle="315" />
+        </shape>
+    </item>
 
-        <item>
-            <shape>
-                <gradient
-                    android:endColor="@color/green"
-                    android:startColor="@color/light_green"
-                    android:angle="315" />
-            </shape>
-        </item>
-</selector>
+    <item>
+        <shape>
+            <solid
+                android:width="2sp"
+                android:color="@color/grey"
+                ></solid>
+        </shape>
+    </item>
+
+    <item android:top="3sp">
+        <shape>
+            <gradient
+                android:endColor="@color/green"
+                android:startColor="@color/light_green"
+                android:angle="315" />
+        </shape>
+    </item>
+
+</layer-list>
