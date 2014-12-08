@@ -12,16 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
+
+import java.util.Calendar;
 
 /**
  * Display interactive list of CupboardItems, with creation button
  */
 public class CupboardFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor>, CustomCursorAdapter.onViewListener {
 
-    private SimpleCursorAdapter adapter;
+    private CustomCursorAdapter adapter;
+
+    final private static Calendar mCalendar = Calendar.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +54,7 @@ public class CupboardFragment extends Fragment implements
         // Columns to get
         String[] projection = {DBContentProvider.CUPBOARD_ITEMS._ID };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
-                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, projection, null, null, null);
+                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;
     }
 
@@ -63,23 +69,52 @@ public class CupboardFragment extends Fragment implements
         adapter.swapCursor(null);
     }
 
-
-    private void populateData(View rootView)
-    {
+    private void populateData(View rootView) {
         getLoaderManager().initLoader(0, null, this);
 
-        // Fields from the database (projection)
-        // Must include the _id column for the adapter to work
-        String[] from = new String[] { DBContentProvider.CUPBOARD_ITEMS._ID };
+        Cursor cursor = getActivity().getContentResolver().query(
+                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
 
-        // Fields on the UI to map to
-        int[] to = new int[] { R.id.shopping_item };
-
-        adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.cupboardrow, null, from,
-                to, 0);
+        adapter = new CustomCursorAdapter(getActivity(), cursor, false, R.layout.cupboardrow);
+        adapter.setOnViewListener(this);
 
         ListView listView = (ListView)rootView.findViewById(R.id.cupboard_list);
-
         listView.setAdapter(adapter);
+    }
+
+    private static String getDateString(Calendar calendar) {
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+
+        return (day + "-" + month + "-" + year);
+    }
+
+    @Override
+    public void onBindView(View view, final Cursor cursor) {
+        final long cupboardId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID));
+        final String itemName = cursor.getString(cursor.getColumnIndex(DatabaseHandler.ITEM_NAME));
+        final long itemExpiry = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
+        mCalendar.setTimeInMillis(itemExpiry);
+
+        ((TextView) view.findViewById(R.id.item_name)).setText(itemName);
+        ((TextView) view.findViewById(R.id.item_expiry_date)).setText(getDateString(mCalendar));
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ItemActivity.class);
+                intent.putExtra(ItemActivity.INTENT_ITEM_URI,
+                        DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI);
+                intent.putExtra(ItemActivity.INTENT_ITEM_ID, cupboardId);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.need_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "TODO", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

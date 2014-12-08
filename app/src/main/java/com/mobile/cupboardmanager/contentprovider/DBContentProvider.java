@@ -10,6 +10,8 @@ import android.net.Uri;
 
 import com.mobile.cupboardmanager.DatabaseHandler;
 
+import java.util.HashMap;
+
 /**
  * Content Provider so we can use the database with a LoaderManager
  *
@@ -28,6 +30,9 @@ public class DBContentProvider extends ContentProvider {
 
     private static final int CUPBOARD_ITEM = 4;
     private static final int CUPBOARD_ITEM_ID = 5;
+
+    private static final HashMap<String, String> mShoppingProjection = createProjectionMapShoppingJoin();
+    private static final HashMap<String, String> mCupboardProjection = createProjectionMapCupboardJoin();
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static
@@ -106,18 +111,32 @@ public class DBContentProvider extends ContentProvider {
                 qBuilder.appendWhere(DatabaseHandler.ITEM_ID + "=" + uri.getLastPathSegment());
                 break;
             case SHOPPING_ITEM:
-                qBuilder.setTables(DatabaseHandler.SHOPPING_TABLE);
+                qBuilder.setTables(DatabaseHandler.SHOPPING_TABLE + " LEFT OUTER JOIN "
+                        + DatabaseHandler.ITEM_TABLE + " ON " + DatabaseHandler.SHOPPING_ITEM
+                        + " = " + DatabaseHandler.ITEM_TABLE + "." + DatabaseHandler.ITEM_ID);
+                qBuilder.setProjectionMap(mShoppingProjection);
                 break;
             case SHOPPING_ITEM_ID:
-                qBuilder.setTables(DatabaseHandler.SHOPPING_TABLE);
-                qBuilder.appendWhere(DatabaseHandler.SHOPPING_ID + "=" + uri.getLastPathSegment());
+                qBuilder.setTables(DatabaseHandler.SHOPPING_TABLE + " LEFT OUTER JOIN "
+                        + DatabaseHandler.ITEM_TABLE + " ON " + DatabaseHandler.SHOPPING_ITEM
+                        + " = " + DatabaseHandler.ITEM_TABLE + "." + DatabaseHandler.ITEM_ID);
+                qBuilder.appendWhere(DatabaseHandler.SHOPPING_TABLE + "." +
+                        DatabaseHandler.SHOPPING_ID + "=" + uri.getLastPathSegment());
+                qBuilder.setProjectionMap(mShoppingProjection);
                 break;
             case CUPBOARD_ITEM:
                 qBuilder.setTables(DatabaseHandler.CUPBOARD_TABLE);
+                qBuilder.setTables(DatabaseHandler.CUPBOARD_TABLE + " LEFT OUTER JOIN "
+                        + DatabaseHandler.ITEM_TABLE + " ON " + DatabaseHandler.CUPBOARD_ITEM
+                        + " = " + DatabaseHandler.ITEM_TABLE + "." + DatabaseHandler.ITEM_ID);
+                qBuilder.setProjectionMap(mCupboardProjection);
                 break;
             case CUPBOARD_ITEM_ID:
-                qBuilder.setTables(DatabaseHandler.CUPBOARD_TABLE);
-                qBuilder.appendWhere(DatabaseHandler.CUPBOARD_ID + "=" + uri.getLastPathSegment());
+                qBuilder.setTables(DatabaseHandler.CUPBOARD_TABLE + " LEFT OUTER JOIN "
+                        + DatabaseHandler.ITEM_TABLE + " ON " + DatabaseHandler.CUPBOARD_ITEM
+                        + " = " + DatabaseHandler.ITEM_TABLE + "." + DatabaseHandler.ITEM_ID);
+                qBuilder.appendWhere(DatabaseHandler.CUPBOARD_TABLE + "." +
+                        DatabaseHandler.CUPBOARD_ID+ "=" + uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -131,6 +150,65 @@ public class DBContentProvider extends ContentProvider {
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
         return cursor;
+    }
+
+    /**
+     * Create unambiguous projections for shopping query
+     * This will allow table joins to be used
+     * @return HashMap of projections
+     */
+    private static HashMap<String, String> createProjectionMapShoppingJoin() {
+        HashMap<String, String> projectionMap = new HashMap<>();
+
+        String itemTab = DatabaseHandler.ITEM_TABLE + ".";
+        String shopTab = DatabaseHandler.SHOPPING_TABLE + ".";
+
+        String shopID = shopTab + DatabaseHandler.SHOPPING_ID;
+        String shopItem = shopTab + DatabaseHandler.SHOPPING_ITEM;
+        String shopQuantity = shopTab + DatabaseHandler.SHOPPING_QUANTITY;
+
+        String itemID = itemTab + DatabaseHandler.ITEM_ID;
+        String itemName = itemTab + DatabaseHandler.ITEM_NAME;
+
+        projectionMap.put(shopID, shopID);
+        projectionMap.put(shopItem, shopItem);
+        projectionMap.put(shopQuantity, shopQuantity);
+        projectionMap.put(itemID, itemID + " AS item_ID");
+        projectionMap.put(itemName, itemName);
+
+        return projectionMap;
+    }
+
+    /**
+     * Create unambiguous projections for cupboard query
+     * This will allow table joins to be used
+     * @return HashMap of projections
+     */
+    private static HashMap<String, String> createProjectionMapCupboardJoin() {
+        HashMap<String, String> projectionMap = new HashMap<>();
+
+        String itemTab = DatabaseHandler.ITEM_TABLE + ".";
+        String shopTab = DatabaseHandler.CUPBOARD_TABLE + ".";
+
+        String cupID = shopTab + DatabaseHandler.CUPBOARD_ID;
+        String cupItem = shopTab + DatabaseHandler.CUPBOARD_ITEM;
+        String cupQuantity = shopTab + DatabaseHandler.CUPBOARD_QUANTITY;
+        String cupExpiry = shopTab + DatabaseHandler.CUPBOARD_EXPIRY_TIME;
+        String cupNotID = shopTab + DatabaseHandler.CUPBOARD_NOTIFICATION_ID;
+
+        String itemID = itemTab + DatabaseHandler.ITEM_ID;
+        String itemName = itemTab + DatabaseHandler.ITEM_NAME;
+
+        projectionMap.put(cupID, cupID);
+        projectionMap.put(cupItem, cupItem);
+        projectionMap.put(cupQuantity, cupQuantity);
+        projectionMap.put(cupExpiry, cupExpiry);
+        projectionMap.put(cupNotID, cupNotID);
+
+        projectionMap.put(itemID, itemID + " AS item_ID");
+        projectionMap.put(itemName, itemName);
+
+        return projectionMap;
     }
 
     @Override
@@ -250,6 +328,8 @@ public class DBContentProvider extends ContentProvider {
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
+
+        getContext().getContentResolver().notifyChange(uri, null);
 
         return updatedRows;
     }

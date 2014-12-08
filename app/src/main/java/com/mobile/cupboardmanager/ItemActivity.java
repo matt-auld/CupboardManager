@@ -104,7 +104,7 @@ public class ItemActivity extends Activity implements SeekBar.OnSeekBarChangeLis
         Intent intent = getIntent();
         itemUri = intent.getExtras().getParcelable(INTENT_ITEM_URI);
         // Attempt to retrieve the item ID, i.e cupboard or shopping item
-        mItemId = intent.getExtras().getInt(INTENT_ITEM_ID, -1);
+        mItemId = intent.getExtras().getLong(INTENT_ITEM_ID, -1);
         // If were passed an existing item ID then we must be in edit mode
         mIsEditMode = (mItemId != -1);
 
