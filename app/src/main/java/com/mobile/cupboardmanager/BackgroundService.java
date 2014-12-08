@@ -1,11 +1,17 @@
 package com.mobile.cupboardmanager;
 
 import android.app.Service;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.IBinder;
+import android.text.format.DateFormat;
 import android.widget.Toast;
 
+import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,9 +33,7 @@ public class BackgroundService extends Service {
         //final DatabaseHandler databaseHandler = new DatabaseHandler(BackgroundService.this);
         //databaseHandler.ItemsOutOfDate();
 
-        DatabaseHandler db = new DatabaseHandler(BackgroundService.this);
-        List<String> items = db.ItemsOutOfDate();
-        db.close();
+        List<String> items = getItemNames();
 
         /*List<String> test = new ArrayList<String>();
         test.add(0,"one");
@@ -56,5 +60,30 @@ public class BackgroundService extends Service {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+
+    private List getItemNames() {
+
+        List<String> Items = new ArrayList<String>();
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String d = sdf.format(date);
+
+        Cursor c = getContentResolver().query(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                long expire_date = c.getLong(c.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
+                String dateString= DateFormat.format("dd-MM-yyyy", new Date(expire_date)).toString();
+                //String notification_flag = c.getString(c.getColumnIndex(DatabaseHandler.CUPBOARD_NOTIFICATION_ID));
+                //System.out.println("Current datestring =; "+ dateString);
+                if (dateString.equals(d)) {
+                    String record = c.getString(c.getColumnIndex(DatabaseHandler.ITEM_NAME));
+                    //System.out.println("Success =; ");
+                    Items.add(record);
+                }
+            } while (c.moveToNext());
+        }
+        c.close();
+        return Items;
+    }
 
 }

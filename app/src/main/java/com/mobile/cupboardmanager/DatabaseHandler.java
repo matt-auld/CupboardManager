@@ -57,6 +57,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     /**
      * Called when the database is created for the first time.
      * Creates each of our tables
+     *
      * @param db the database
      */
     @Override
@@ -72,7 +73,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ITEM_TABLE + "(" + ITEM_ID + ")" + ")";
 
         final String CREATE_CUPBOARD_TABLE = "CREATE TABLE " + CUPBOARD_TABLE + "(" +
-                CUPBOARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "  + SHOPPING_ITEM + " INTEGER, " +
+                CUPBOARD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SHOPPING_ITEM + " INTEGER, " +
                 CUPBOARD_QUANTITY + " INTEGER, " + CUPBOARD_EXPIRY_TIME + " INTEGER, " + CUPBOARD_NOTIFICATION_ID +
                 " INTEGER" + CUPBOARD_ITEM + " INTEGER, FOREIGN KEY (" + CUPBOARD_ITEM + ") REFERENCES " +
                 ITEM_TABLE + "(" + ITEM_ID + ")" + ")";
@@ -123,10 +124,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Item> items = new ArrayList<Item>();
 
-        Cursor c = db.query(ITEM_TABLE, new String[] {ITEM_ID}, ITEM_ID+" LIKE ?",
-                new String[]{"%"+constraint+"%"}, null, null, null);
+        Cursor c = db.query(ITEM_TABLE, new String[]{ITEM_ID}, ITEM_ID + " LIKE ?",
+                new String[]{"%" + constraint + "%"}, null, null, null);
 
-        while(c.moveToNext()) {
+        while (c.moveToNext()) {
             Item item = new Item();
             item.setName(c.getString(c.getColumnIndex(ITEM_ID)));
             items.add(item);
@@ -142,13 +143,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(ITEM_NAME, item.getName());
 
-        return db.update(ITEM_TABLE, values, ITEM_NAME + " = ?", new String[] {item.getName()});
+        return db.update(ITEM_TABLE, values, ITEM_NAME + " = ?", new String[]{item.getName()});
     }
 
     //delete item from database. returns number of deleted rows
     public int deleteItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(ITEM_TABLE, ITEM_NAME + " = ?", new String[] {item.getName()});
+        return db.delete(ITEM_TABLE, ITEM_NAME + " = ?", new String[]{item.getName()});
     }
 
     //insert shopping item into database
@@ -165,13 +166,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = qBuilder.query(db, projection, null, null, null, null, null);
 
-        if (cursor.getCount() < 1)
-        {
+
+        if (cursor.getCount() < 1) {
             throw new NoSuchElementException("No item found in the Items table with the name of: " +
                     shoppingItem.getName() + "\" when trying to insert a shopping item");
-        }
-        else if (cursor.getCount() > 1)
-        {
+        } else if (cursor.getCount() > 1) {
             Log.w(TAG, "Multiple items found for name: " + shoppingItem.getName() +
                     "\" when trying to insert a shopping item");
         }
@@ -239,7 +238,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(SHOPPING_ITEM, shoppingItem.getName());
         values.put(SHOPPING_QUANTITY, shoppingItem.getQuantity());
 
-        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[] {shoppingItem.getName()});
+        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[]{shoppingItem.getName()});
     }
 
     //delete shoppingitem from database. returns number of deleted rows
@@ -262,13 +261,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = qBuilder.query(db, projection, null, null, null, null, null);
 
-        if (cursor.getCount() < 1)
-        {
+        if (cursor.getCount() < 1) {
             throw new NoSuchElementException("No item found in the Items table with the name of: \"" +
                     cupboardItem.getName() + "\" when trying to insert a cupboard item");
-        }
-        else if (cursor.getCount() > 1)
-        {
+        } else if (cursor.getCount() > 1) {
             Log.w(TAG, "Multiple items found for name: " + cupboardItem.getName() +
                     "\" when trying to insert a cupboard item");
         }
@@ -294,7 +290,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE + " WHERE "
-                + CUPBOARD_ITEM+ " = '" + cupboard_item_name + "'";
+                + CUPBOARD_ITEM + " = '" + cupboard_item_name + "'";
 
         Cursor c = db.rawQuery(selectQuery, null);
         if (c == null) {
@@ -344,42 +340,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(CUPBOARD_EXPIRY_TIME, cupboardItem.getExpiry_time_ms());
         values.put(CUPBOARD_NOTIFICATION_ID, cupboardItem.getNotification_id());
 
-        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[] {cupboardItem.getName()});
+        return db.update(SHOPPING_TABLE, values, SHOPPING_ITEM + " = ?", new String[]{cupboardItem.getName()});
     }
 
     //delete cupboard item from database. returns number of deleted rows
     public int deleteItem(CupboardItem cupboardItem) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(CUPBOARD_TABLE, CUPBOARD_ITEM + " = ?", new String[] {cupboardItem.getName()});
+        return db.delete(CUPBOARD_TABLE, CUPBOARD_ITEM + " = ?", new String[]{cupboardItem.getName()});
     }
 
 
-    //fetch cupboard item from database, using the name (foreign key from item)
-    public List<String> ItemsOutOfDate() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> Items = new ArrayList<String>();
-
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String d = sdf.format(date);
-
-        //System.out.println("Current datestring =; "+ d);
-        String selectQuery = "SELECT  * FROM " + CUPBOARD_TABLE;
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        if (c.moveToFirst()) {
-            do {
-                long expire_date = c.getLong(c.getColumnIndex(CUPBOARD_EXPIRY_TIME));
-                String dateString= DateFormat.format("dd-MM-yyyy", new Date(expire_date)).toString();
-                //System.out.println("Current datestring =; "+ dateString);
-                if (dateString.equals(d)) {
-                    String record = c.getString(c.getColumnIndex(CUPBOARD_ITEM));
-                    //System.out.println("Success =; ");
-                    Items.add(record);
-                }
-            } while (c.moveToNext());
-        }
-        return Items;
-    }
 }
+
 
