@@ -86,9 +86,9 @@ public class ShoppingFragment extends Fragment implements
 
     @Override
     public void onBindView(View view, Cursor cursor) {
-        ((TextView)view.findViewById(R.id.item_name)).setText(cursor.getString(
-                cursor.getColumnIndex(DatabaseHandler.SHOPPING_ID)));
+        final String itemName = cursor.getString(cursor.getColumnIndex(DatabaseHandler.ITEM_NAME));
         final long shoppingId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.SHOPPING_ID));
+        ((TextView)view.findViewById(R.id.item_name)).setText(itemName);
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
+import java.util.Calendar;
+
 /**
  * Display interactive list of CupboardItems, with creation button
  */
@@ -24,6 +26,8 @@ public class CupboardFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, CustomCursorAdapter.onViewListener {
 
     private CustomCursorAdapter adapter;
+
+    final private static Calendar mCalendar = Calendar.getInstance();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,11 +82,23 @@ public class CupboardFragment extends Fragment implements
         listView.setAdapter(adapter);
     }
 
+    private static String getDateString(Calendar calendar) {
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+
+        return (day + "-" + month + "-" + year);
+    }
+
     @Override
     public void onBindView(View view, final Cursor cursor) {
-        ((TextView)view.findViewById(R.id.item_name)).setText(cursor.getString(
-                cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID)));
         final long cupboardId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID));
+        final String itemName = cursor.getString(cursor.getColumnIndex(DatabaseHandler.ITEM_NAME));
+        final long itemExpiry = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
+        mCalendar.setTimeInMillis(itemExpiry);
+
+        ((TextView) view.findViewById(R.id.item_name)).setText(itemName);
+        ((TextView) view.findViewById(R.id.item_expiry_date)).setText(getDateString(mCalendar));
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
