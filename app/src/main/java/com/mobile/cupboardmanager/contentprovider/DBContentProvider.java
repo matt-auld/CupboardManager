@@ -329,6 +329,8 @@ public class DBContentProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
 
+        getContext().getContentResolver().notifyChange(uri, null);
+
         return updatedRows;
     }
 }
