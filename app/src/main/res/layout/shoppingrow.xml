@@ -5,15 +5,15 @@
     android:padding="20sp"
     android:background="@drawable/shoppinglistview">
 
-    <CheckBox android:id="@+id/item_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="#000000"
-        android:padding="0sp"
-        android:paddingLeft="20sp"
+    <Button
+        android:layout_width="45sp"
+        android:layout_height="45sp"
+        android:text="NEED\nMORE"
+        android:textSize="10sp"
+        android:id="@+id/need_more"
         android:layout_gravity="center_vertical"
-        android:checked="false" />
+        android:background="@color/light_green"
+        android:onClick="onNeedMoreButtonClick"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
         android:text="@string/shopping_row_item_name"
-        android:id="@+id/shopping_item"
+        android:id="@+id/item_name"
         android:layout_gravity="center_vertical"
         android:paddingLeft="0sp"/>
 

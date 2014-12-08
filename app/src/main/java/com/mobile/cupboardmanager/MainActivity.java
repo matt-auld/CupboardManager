@@ -46,29 +46,6 @@ public class MainActivity extends FragmentActivity {
         }
         Intent intent = new Intent(this, RunService.class);
         sendBroadcast(intent);
-
-        //Shopping item checkbox listener TODO: fix findviewbyid
-        CheckBox itemCheckbox = (CheckBox) findViewById(R.id.item_checkbox);
-        if(itemCheckbox != null) {
-            itemCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //TODO: remove item from shopping list, and add to cupboard list
-                    Log.d("Checkbox","Checkbox listener called");
-                }
-            });
-        }
-
-        //need more button listener TODO: fix findviewbyid
-        Button button = (Button)findViewById(R.id.button);
-        if(button != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO: remove item from cupboard list, and add to shopping list
-                }
-            });
-        }
     }
 
 
