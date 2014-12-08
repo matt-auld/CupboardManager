@@ -7,7 +7,7 @@
 
     <style name="PagerSlidingTabStrip">
         <item name="pstsShouldExpand">true</item>
-        <item name="pstsIndicatorColor">@color/blue</item>
+        <item name="pstsIndicatorColor">@color/light_grey</item>
     </style>
 
 </resources>
