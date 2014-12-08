@@ -165,6 +165,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = qBuilder.query(db, projection, null, null, null, null, null);
 
+
+
+
         if (cursor.getCount() < 1)
         {
             throw new NoSuchElementException("No item found in the Items table with the name of: " +
