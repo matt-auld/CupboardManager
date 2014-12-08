@@ -1,5 +1,7 @@
 package com.mobile.cupboardmanager;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -82,6 +84,17 @@ public class CupboardFragment extends Fragment implements
         listView.setAdapter(adapter);
     }
 
+    private void moveCupboardItemToShopping(long cupboardID, long itemID, int quantity) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHandler.SHOPPING_ITEM, itemID);
+        values.put(DatabaseHandler.SHOPPING_QUANTITY, quantity);
+
+        getActivity().getContentResolver().insert(DBContentProvider.SHOPPING_ITEMS.CONTENT_URI,
+                values);
+        getActivity().getContentResolver().delete(ContentUris.withAppendedId(
+                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, cupboardID), null, null);
+    }
+
     private static String getDateString(Calendar calendar) {
         int day = calendar.get(Calendar.DAY_OF_MONTH);
         int month = calendar.get(Calendar.MONTH) + 1;
@@ -93,6 +106,8 @@ public class CupboardFragment extends Fragment implements
     @Override
     public void onBindView(View view, final Cursor cursor) {
         final long cupboardId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID));
+        final long itemId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ITEM));
+        final int itemQuantity = cursor.getInt(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_QUANTITY));
         final String itemName = cursor.getString(cursor.getColumnIndex(DatabaseHandler.ITEM_NAME));
         final long itemExpiry = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
         mCalendar.setTimeInMillis(itemExpiry);
@@ -113,7 +128,8 @@ public class CupboardFragment extends Fragment implements
         view.findViewById(R.id.need_more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "TODO", Toast.LENGTH_SHORT).show();
+                moveCupboardItemToShopping(cupboardId, itemId, itemQuantity);
+                Toast.makeText(getActivity(), "Item moved to shopping list", Toast.LENGTH_SHORT).show();
             }
         });
     }
