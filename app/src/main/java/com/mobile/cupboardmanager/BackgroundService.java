@@ -68,16 +68,14 @@ public class BackgroundService extends Service {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         String d = sdf.format(date);
 
-
-        String name = null;
         Cursor c = getContentResolver().query(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
         if (c.moveToFirst()) {
             do {
                 long expire_date = c.getLong(c.getColumnIndex(DatabaseHandler.CUPBOARD_EXPIRY_TIME));
                 String dateString= DateFormat.format("dd-MM-yyyy", new Date(expire_date)).toString();
-                String notification_flag = c.getString(c.getColumnIndex(DatabaseHandler.CUPBOARD_NOTIFICATION_ID));
+                //String notification_flag = c.getString(c.getColumnIndex(DatabaseHandler.CUPBOARD_NOTIFICATION_ID));
                 //System.out.println("Current datestring =; "+ dateString);
-                if (dateString.equals(d) && notification_flag != "0") {
+                if (dateString.equals(d)) {
                     String record = c.getString(c.getColumnIndex(DatabaseHandler.ITEM_NAME));
                     //System.out.println("Success =; ");
                     Items.add(record);
