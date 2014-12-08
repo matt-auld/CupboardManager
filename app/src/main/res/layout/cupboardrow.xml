@@ -10,7 +10,7 @@
         android:layout_height="45sp"
         android:text="NEED\nMORE"
         android:textSize="10sp"
-        android:id="@+id/button"
+        android:id="@+id/need_more"
         android:layout_gravity="center_vertical"
         android:background="@color/light_green"
         android:onClick="onNeedMoreButtonClick"/>
@@ -21,7 +21,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
         android:text="@string/cupboard_row_item_name"
-        android:id="@+id/cupboard_item"
+        android:id="@+id/item_name"
         android:layout_gravity="center_vertical"
         android:paddingLeft="10sp"/>
 

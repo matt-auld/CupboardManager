@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
@@ -19,9 +21,9 @@ import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
  * Display interactive list of CupboardItems, with creation button
  */
 public class CupboardFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>{
+        LoaderManager.LoaderCallbacks<Cursor>, CustomCursorAdapter.onViewListener {
 
-    private SimpleCursorAdapter adapter;
+    private CustomCursorAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,23 +65,40 @@ public class CupboardFragment extends Fragment implements
         adapter.swapCursor(null);
     }
 
-
-    private void populateData(View rootView)
-    {
+    private void populateData(View rootView) {
         getLoaderManager().initLoader(0, null, this);
 
-        // Fields from the database (projection)
-        // Must include the _id column for the adapter to work
-        String[] from = new String[] { DBContentProvider.CUPBOARD_ITEMS._ID };
+        Cursor cursor = getActivity().getContentResolver().query(
+                DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
 
-        // Fields on the UI to map to
-        int[] to = new int[] { R.id.shopping_item };
-
-        adapter = new SimpleCursorAdapter(getActivity().getApplicationContext(), R.layout.cupboardrow, null, from,
-                to, 0);
+        adapter = new CustomCursorAdapter(getActivity(), cursor, false, R.layout.cupboardrow);
+        adapter.setOnViewListener(this);
 
         ListView listView = (ListView)rootView.findViewById(R.id.cupboard_list);
-
         listView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBindView(View view, final Cursor cursor) {
+        ((TextView)view.findViewById(R.id.item_name)).setText(cursor.getString(
+                cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID)));
+        final long cupboardId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID));
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ItemActivity.class);
+                intent.putExtra(ItemActivity.INTENT_ITEM_URI,
+                        DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI);
+                intent.putExtra(ItemActivity.INTENT_ITEM_ID, cupboardId);
+                startActivity(intent);
+            }
+        });
+
+        view.findViewById(R.id.need_more).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "TODO", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
