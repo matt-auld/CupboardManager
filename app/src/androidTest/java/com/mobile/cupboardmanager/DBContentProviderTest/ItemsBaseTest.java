@@ -6,10 +6,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.test.ProviderTestCase2;
 
-import com.mobile.cupboardmanager.CupboardItem;
 import com.mobile.cupboardmanager.DatabaseHandler;
-import com.mobile.cupboardmanager.Item;
-import com.mobile.cupboardmanager.ShoppingItem;
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
 import java.util.ArrayList;

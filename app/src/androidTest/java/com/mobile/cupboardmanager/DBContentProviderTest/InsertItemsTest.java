@@ -1,17 +1,9 @@
 package com.mobile.cupboardmanager.DBContentProviderTest;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.test.ProviderTestCase2;
 
-import com.mobile.cupboardmanager.CupboardItem;
-import com.mobile.cupboardmanager.DatabaseHandler;
-import com.mobile.cupboardmanager.Item;
-import com.mobile.cupboardmanager.ShoppingItem;
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
-
-import java.util.ArrayList;
 
 /**
  * Created by Paul on 02/12/2014.
