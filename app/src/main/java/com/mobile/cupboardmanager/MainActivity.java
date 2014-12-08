@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ShareActionProvider;
@@ -46,7 +47,7 @@ public class MainActivity extends FragmentActivity {
         Intent intent = new Intent(this, RunService.class);
         sendBroadcast(intent);
 
-        //Shopping item checkbox listener
+        //Shopping item checkbox listener TODO: fix findviewbyid
         CheckBox itemCheckbox = (CheckBox) findViewById(R.id.item_checkbox);
         if(itemCheckbox != null) {
             itemCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -58,6 +59,16 @@ public class MainActivity extends FragmentActivity {
             });
         }
 
+        //need more button listener TODO: fix findviewbyid
+        Button button = (Button)findViewById(R.id.button);
+        if(button != null) {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO: remove item from cupboard list, and add to shopping list
+                }
+            });
+        }
     }
 
 
@@ -97,10 +108,6 @@ public class MainActivity extends FragmentActivity {
             shareIntent.putExtra(Intent.EXTRA_TEXT, s);
             mShareActionProvider.setShareIntent(shareIntent);
         }
-    }
-
-    public void onNeedMoreButtonClick(View view) {
-        //TODO: remove item from cupboard list, and add to shopping list
     }
 
     /*
