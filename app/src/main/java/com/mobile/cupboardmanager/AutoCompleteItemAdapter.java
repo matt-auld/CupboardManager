@@ -82,7 +82,7 @@ public class AutoCompleteItemAdapter extends ArrayAdapter<String> {
                 new String[] {DBContentProvider.ITEMS.Name}, DBContentProvider.ITEMS.Name +
                         " LIKE ?", new String[]{"%"+constraint+"%"}, null);
 
-        List<String> matchingItemNames = new ArrayList<>();
+        List<String> matchingItemNames = new ArrayList<String>();
         while (cursor.moveToNext()) {
             String name =  cursor.getString(cursor.getColumnIndex(DBContentProvider.ITEMS.Name));
             matchingItemNames.add(name);
