@@ -18,7 +18,7 @@
     <Button
         android:layout_width="50sp"
         android:layout_height="50sp"
-        android:text="MOVE\nTO\nCUPBOARD"
+        android:text="@string/shoppingbutton"
         android:textSize="8sp"
         android:id="@+id/needmorebutton"
         android:layout_gravity="center_vertical"
