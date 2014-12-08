@@ -1,6 +1,5 @@
 package com.mobile.cupboardmanager;
 
-
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +26,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class ShoppingFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, CustomCursorAdapter.onViewListener {
-
 
     private CustomCursorAdapter adapter;
 
@@ -52,13 +49,8 @@ public class ShoppingFragment extends Fragment implements
         return rootView;
     }
 
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
-        String[] projection = {DBContentProvider.SHOPPING_ITEMS._ID,
-                DBContentProvider.SHOPPING_ITEMS.Quantity };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
                 DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;

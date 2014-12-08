@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,9 +51,6 @@ public class CupboardFragment extends Fragment implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
-        // Columns to get
-        String[] projection = {DBContentProvider.CUPBOARD_ITEMS._ID };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
                 DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;
