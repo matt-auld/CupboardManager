@@ -8,11 +8,11 @@
     <Button
         android:layout_width="45sp"
         android:layout_height="45sp"
-        android:text="DONE"
+        android:text="@string/got_item"
         android:textSize="10sp"
         android:id="@+id/need_more"
         android:layout_gravity="center_vertical"
-        android:background="@color/light_green"
+        android:background="@color/light_blue"
         android:onClick="onNeedMoreButtonClick"/>
 
     <TextView
@@ -24,7 +24,5 @@
         android:id="@+id/item_name"
         android:layout_gravity="center_vertical"
         android:paddingLeft="10sp"/>
-
-
 
 </LinearLayout>

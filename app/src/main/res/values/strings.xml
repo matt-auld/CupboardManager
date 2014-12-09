@@ -19,5 +19,10 @@
     <string name="activity_main_cupboard">CUPBOARD</string>
     <string name="shopping_row_item_name">Item name will go here</string>
     <string name="cupboard_row_item_name">Cupboard item </string>
+    <string name="add_button">+</string>
+    <string name="need_more">NEED\nMORE</string>
+    <string name="quantity">x</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="got_item">GOT\nITEM</string>
 
 </resources>

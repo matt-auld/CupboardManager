@@ -8,7 +8,7 @@
     <Button
         android:layout_width="45sp"
         android:layout_height="45sp"
-        android:text="NEED\nMORE"
+        android:text="@string/need_more"
         android:textSize="10sp"
         android:id="@+id/need_more"
         android:layout_gravity="center_vertical"
@@ -33,7 +33,5 @@
         android:id="@+id/item_expiry_date"
         android:layout_gravity="center_vertical"
         android:paddingLeft="10sp"/>
-
-
 
 </LinearLayout>
