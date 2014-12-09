@@ -100,7 +100,8 @@ public class CupboardFragment extends Fragment implements
     }
 
     @Override
-    public void onBindView(View view, final Cursor cursor) {
+    public void onBindView(final View view, final Cursor cursor) {
+        view.setAlpha(1f);
         final long cupboardId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ID));
         final long itemId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_ITEM));
         final int itemQuantity = cursor.getInt(cursor.getColumnIndex(DatabaseHandler.CUPBOARD_QUANTITY));
@@ -124,8 +125,13 @@ public class CupboardFragment extends Fragment implements
         view.findViewById(R.id.need_more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveCupboardItemToShopping(cupboardId, itemId, itemQuantity);
-                Toast.makeText(getActivity(), "Item moved to shopping list", Toast.LENGTH_SHORT).show();
+                view.animate().alpha(0.3f).setDuration(150).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        moveCupboardItemToShopping(cupboardId, itemId, itemQuantity);
+                        Toast.makeText(getActivity(), "Item moved to shopping list", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
     }
