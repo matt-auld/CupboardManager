@@ -72,10 +72,10 @@ public class MainActivity extends FragmentActivity {
             //TODO: setShareIntent() whenever the shopping list changes
             DatabaseHandler db = new DatabaseHandler(MainActivity.this);
             String s = "";
-            List<ShoppingItem> listOfItems = db.fetchAllShoppingItems();
-            for (ShoppingItem item : listOfItems) {
-                s += item.getName() + "\n";
-            }
+//            List<ShoppingItem> listOfItems = db.fetchAllShoppingItems();
+//            for (ShoppingItem item : listOfItems) {
+//                s += item.getName() + "\n";
+//            }
 
             shareIntent.putExtra(Intent.EXTRA_TEXT, s);
             mShareActionProvider.setShareIntent(shareIntent);

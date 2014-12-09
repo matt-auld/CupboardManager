@@ -1,7 +1,7 @@
 package com.mobile.cupboardmanager;
 
-
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,14 @@ import android.widget.Toast;
 
 import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Display interactive list of ShoppingItems, with creation button
  */
 public class ShoppingFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>, CustomCursorAdapter.onViewListener {
-
 
     private CustomCursorAdapter adapter;
 
@@ -48,13 +49,8 @@ public class ShoppingFragment extends Fragment implements
         return rootView;
     }
 
-
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-
-        String[] projection = {DBContentProvider.SHOPPING_ITEMS._ID,
-                DBContentProvider.SHOPPING_ITEMS.Quantity };
         CursorLoader cursorLoader = new CursorLoader(getActivity().getBaseContext(),
                 DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, null, null, null, null);
         return cursorLoader;
@@ -84,9 +80,27 @@ public class ShoppingFragment extends Fragment implements
         listView.setAdapter(adapter);
     }
 
+    private void moveShoppingItemToCupboard(long shoppingId, long itemID, int quantity) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHandler.CUPBOARD_ITEM, itemID);
+        values.put(DatabaseHandler.CUPBOARD_QUANTITY, quantity);
+
+        Calendar calendar = Calendar.getInstance();
+        long tomorrowInMs = calendar.getTimeInMillis() + TimeUnit.DAYS.toMillis(1);
+        // Placeholder date
+        values.put(DatabaseHandler.CUPBOARD_EXPIRY_TIME, tomorrowInMs);
+
+        getActivity().getContentResolver().insert(DBContentProvider.CUPBOARD_ITEMS.CONTENT_URI,
+                values);
+        getActivity().getContentResolver().delete(ContentUris.withAppendedId(
+                DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, shoppingId), null, null);
+    }
+
     @Override
     public void onBindView(View view, Cursor cursor) {
         final String itemName = cursor.getString(cursor.getColumnIndex(DatabaseHandler.ITEM_NAME));
+        final long itemId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.SHOPPING_ITEM));
+        final int itemQuantity = cursor.getInt(cursor.getColumnIndex(DatabaseHandler.SHOPPING_QUANTITY));
         final long shoppingId = cursor.getLong(cursor.getColumnIndex(DatabaseHandler.SHOPPING_ID));
         ((TextView)view.findViewById(R.id.item_name)).setText(itemName);
         view.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +117,8 @@ public class ShoppingFragment extends Fragment implements
         view.findViewById(R.id.need_more).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "TODO", Toast.LENGTH_SHORT).show();
+                moveShoppingItemToCupboard(shoppingId, itemId, itemQuantity);
+                Toast.makeText(getActivity(), "Item moved to cupboard list", Toast.LENGTH_SHORT).show();
             }
         });
     }

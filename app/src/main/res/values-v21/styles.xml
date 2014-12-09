@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
-    </style>
+   <!-- <style name="AppTheme" parent="android:Theme.Material.Light.DarkActionBar">
+    </style> -->
 
     <style name="PagerSlidingTabStrip">
         <item name="pstsShouldExpand">true</item>
-        <item name="pstsIndicatorColor">@color/blue</item>
+        <item name="pstsIndicatorColor">@color/light_grey</item>
     </style>
 </resources>
