@@ -79,7 +79,7 @@ public class MainActivity extends FragmentActivity {
 
             //loop through cursor
             while (mCursor.moveToNext()) {
-                s += mCursor.getString(1) + "\n";
+                s += mCursor.getString(mCursor.getColumnIndex(DatabaseHandler.ITEM_NAME)) + "\n";
             }
 
             shareIntent.putExtra(Intent.EXTRA_TEXT, s);
