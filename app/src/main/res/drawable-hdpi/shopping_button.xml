@@ -22,8 +22,7 @@
         <shape>
             <solid
                 android:width="2sp"
-                android:color="@color/grey"
-                ></solid>
+                android:color="@color/grey"/>
         </shape>
     </item>
 

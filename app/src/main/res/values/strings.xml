@@ -24,5 +24,6 @@
     <string name="quantity">x</string>
     <string name="button_cancel">Cancel</string>
     <string name="got_item">GOT\nITEM</string>
+    <string name="menu_share">Share</string>
 
 </resources>
