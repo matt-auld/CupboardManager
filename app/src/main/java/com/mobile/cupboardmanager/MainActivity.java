@@ -1,6 +1,7 @@
 package com.mobile.cupboardmanager;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
@@ -9,8 +10,7 @@ import android.view.MenuItem;
 import android.widget.ShareActionProvider;
 
 import com.astuetz.PagerSlidingTabStrip;
-
-import java.util.List;
+import com.mobile.cupboardmanager.contentprovider.DBContentProvider;
 
 
 public class MainActivity extends FragmentActivity {
@@ -72,10 +72,15 @@ public class MainActivity extends FragmentActivity {
             //TODO: setShareIntent() whenever the shopping list changes
             DatabaseHandler db = new DatabaseHandler(MainActivity.this);
             String s = "";
-//            List<ShoppingItem> listOfItems = db.fetchAllShoppingItems();
-//            for (ShoppingItem item : listOfItems) {
-//                s += item.getName() + "\n";
-//            }
+
+            //construct cursor containing results from contentprovider
+            Cursor mCursor = getContentResolver().query(
+                    DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, null, null, null, null);
+
+            //loop through cursor
+            while (mCursor.moveToNext()) {
+                s += mCursor.getString(1) + "\n";
+            }
 
             shareIntent.putExtra(Intent.EXTRA_TEXT, s);
             mShareActionProvider.setShareIntent(shareIntent);
