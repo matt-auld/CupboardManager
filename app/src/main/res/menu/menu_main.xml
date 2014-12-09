@@ -5,6 +5,8 @@
     <item
         android:id="@+id/menu_add_reminder"
         android:title="@string/menu_add_reminder"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom"
         />
     <item
         android:id="@+id/menu_item_share"
