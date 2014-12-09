@@ -25,5 +25,11 @@
     <string name="button_cancel">Cancel</string>
     <string name="got_item">GOT\nITEM</string>
     <string name="menu_share">Share</string>
+    <string name="title_activity_shopping_reminder">ShoppingReminderActivity</string>
+    <string name="default_shopping_reminder_name">Go Shopping</string>
+    <string name="reminder_name_hint">Event name</string>
+    <string name="reminder_date_hint_text">Date</string>
+    <string name="reminder_time_hint_text">Time</string>
+    <string name="menu_add_reminder">Add Shopping Reminder</string>
 
 </resources>

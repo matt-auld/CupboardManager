@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
+        android:id="@+id/menu_add_reminder"
+        android:title="@string/menu_add_reminder"
+        />
+    <item
         android:id="@+id/menu_item_share"
         android:showAsAction="ifRoom"
         android:title="@string/menu_share"

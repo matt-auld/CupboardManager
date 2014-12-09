@@ -22,6 +22,9 @@
         <activity
             android:name=".ItemActivity"
             android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".ShoppingReminderActivity"
+            android:theme="@style/AppTheme"/>
         
         <provider
             android:exported="true"
