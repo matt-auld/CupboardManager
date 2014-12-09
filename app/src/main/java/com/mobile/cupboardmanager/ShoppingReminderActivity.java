@@ -81,19 +81,6 @@ public class ShoppingReminderActivity extends Activity {
         startActivity(intent);
     }
 
-    private String getItemName(String id)
-    {
-        String[] itemID = { id };
-        Cursor nameCursor = getContentResolver().query(
-                DBContentProvider.ITEMS.CONTENT_URI, null, DBContentProvider.ITEMS._ID + " = ?", itemID, null);
-
-        if (!nameCursor.moveToNext()) throw new NoSuchElementException("Can not find item id");
-
-        int nameIndex = nameCursor.getColumnIndex(DBContentProvider.ITEMS.Name);
-
-        return nameCursor.getString(nameIndex);
-    }
-
     private String getShoppingList()
     {
         String s = "Shopping list: " ;
@@ -102,12 +89,12 @@ public class ShoppingReminderActivity extends Activity {
         Cursor mCursor = getContentResolver().query(
                 DBContentProvider.SHOPPING_ITEMS.CONTENT_URI, null, null, null, null);
 
-        int itemIndex = mCursor.getColumnIndex(DBContentProvider.SHOPPING_ITEMS.Item);
         int quantityIndex = mCursor.getColumnIndex(DBContentProvider.SHOPPING_ITEMS.Quantity);
+        int nameIndex = mCursor.getColumnIndex(DBContentProvider.ITEMS.Name);
 
         if (mCursor.moveToNext())
         {
-            s += getItemName(mCursor.getString(itemIndex)) + " x" + mCursor.getString(quantityIndex);
+            s += mCursor.getString(nameIndex) + " x" + mCursor.getString(quantityIndex);
         }
         else
         {
@@ -116,7 +103,7 @@ public class ShoppingReminderActivity extends Activity {
 
         // Get items from cursor
         while (mCursor.moveToNext()) {
-            s += ", " + getItemName(mCursor.getString(itemIndex)) + " x" + mCursor.getString(quantityIndex);
+            s += ", " + mCursor.getString(nameIndex) + " x" + mCursor.getString(quantityIndex);
         }
 
         return s;
