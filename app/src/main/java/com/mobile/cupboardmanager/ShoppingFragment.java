@@ -59,6 +59,7 @@ public class ShoppingFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         adapter.swapCursor(data);
+        ((MainActivity)getActivity()).setShareIntent();
     }
 
     @Override
