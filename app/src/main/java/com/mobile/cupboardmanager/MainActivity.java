@@ -61,7 +61,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     //shares the shopping list as a plaintext list of item names
-    private void setShareIntent() {
+    public void setShareIntent() {
 
         if (mShareActionProvider != null) {
 
