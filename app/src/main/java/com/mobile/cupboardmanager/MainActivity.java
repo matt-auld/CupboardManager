@@ -69,8 +69,6 @@ public class MainActivity extends FragmentActivity {
             shareIntent.setType("text/plain");
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Shopping List");
 
-            //TODO: setShareIntent() whenever the shopping list changes
-            DatabaseHandler db = new DatabaseHandler(MainActivity.this);
             String s = "";
 
             //construct cursor containing results from contentprovider
